@@ -1,4 +1,4 @@
-package com.example.grocerycompanion
+package com.example.grocerycompanion.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -22,10 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.grocerycompanion.R
 
 @Composable
-fun SignUpPage(
-    onReturnToLogin: () -> Unit = {}
+fun LoginScreen(
+    onGoToSignUp: () -> Unit = {}
 ) {
 
     var email by remember {
@@ -33,10 +34,6 @@ fun SignUpPage(
     }
 
     var password by remember {
-        mutableStateOf( "")
-    }
-
-    var name by remember {
         mutableStateOf( "")
     }
 
@@ -51,24 +48,22 @@ fun SignUpPage(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = "Create Your Account", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Welcome Back", fontSize = 28.sp, fontWeight = FontWeight.Bold)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(value = name, onValueChange = {name = it}, label = {
-            Text(text = "Enter your Name")
-        })
+        Text(text = "Login To Your Account")
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(value = email, onValueChange = {email = it}, label = {
-            Text(text = "Enter Your Email Address")
+            Text(text = "Email Address")
         })
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(value = password, onValueChange = {password = it}, label = {
-            Text(text = "Enter Your Password")
+            Text(text = "Password")
 
             // hides the password as dots
         }, visualTransformation = PasswordVisualTransformation())
@@ -80,15 +75,21 @@ fun SignUpPage(
 
             // this the logic for the login - we will use firebase authentication for it
 
-            Log.i("Credential", "Name : $name Email : $email Password : $password")
+            Log.i("Credential", "Email : $email Password : $password")
         }) {
-            Text(text = "Save")
+            Text(text = "Login")
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Text(text = "Return To Login Page", modifier = Modifier.clickable {
-            onReturnToLogin()
+        Text(text = "Forgot Password?", modifier = Modifier.clickable {
+
+        })
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = "Click Here if You Don't Have an Account!", modifier = Modifier.clickable {
+            onGoToSignUp()
         })
     }
 
