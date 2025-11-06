@@ -74,10 +74,12 @@ fun LoginScreen(
 
         Button(onClick = {
 
+            if (email.isNotBlank() && password.isNotBlank()) onLogin(email.trim(), password)
+
             // this the logic for the login - we will use firebase authentication for it
 
             Log.i("Credential", "Email : $email Password : $password")
-            onLogin(email.trim(), password.trim())
+            //onLogin(email.trim(), password.trim())
         }) {
             Text(text = "Login")
         }

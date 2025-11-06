@@ -26,7 +26,8 @@ import com.example.grocerycompanion.R
 
 @Composable
 fun SignUpPage(
-    onReturnToLogin: () -> Unit = {}
+    onReturnToLogin: () -> Unit,
+    onSignUpComplete: (name: String, email: String, password: String) -> Unit
 ) {
 
     var email by remember {
@@ -79,7 +80,11 @@ fun SignUpPage(
 
         Button(onClick = {
 
-            // this the logic for the login - we will use firebase authentication for it
+            if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
+                onSignUpComplete(name.trim(), email.trim(), password)
+            }
+
+        // this the logic for the login - we will use firebase authentication for it
 
             Log.i("Credential", "Name : $name Email : $email Password : $password")
         }) {
