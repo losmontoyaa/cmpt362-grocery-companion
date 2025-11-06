@@ -26,6 +26,7 @@ import com.example.grocerycompanion.R
 
 @Composable
 fun LoginScreen(
+    onLogin: (String, String) -> Unit,
     onGoToSignUp: () -> Unit = {}
 ) {
 
@@ -76,6 +77,7 @@ fun LoginScreen(
             // this the logic for the login - we will use firebase authentication for it
 
             Log.i("Credential", "Email : $email Password : $password")
+            onLogin(email.trim(), password.trim())
         }) {
             Text(text = "Login")
         }
