@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-75:/values-v30/values-v30.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\e7f936b3bcde3ba69481ee189371cd0b\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "72",
+                        "endOffsets": "123"
+                    }
+                }
+            ]
+        }
+    ]
+}

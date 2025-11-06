@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/row_list_item.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/row_list_item.xml"
+    },
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/row_item_card.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/row_item_card.xml"
+    },
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/fragment_shopping_list.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/fragment_shopping_list.xml"
+    },
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/row_store_price.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/row_store_price.xml"
+    },
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/row_item_small.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/row_item_small.xml"
+    },
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/fragment_item_list.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/fragment_item_list.xml"
+    },
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/activity_main.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.grocerycompanion.app-mergeDebugResources-76:/layout/fragment_item_detail.xml",
+        "source": "com.example.grocerycompanion.app-main-79:/layout/fragment_item_detail.xml"
+    }
+]

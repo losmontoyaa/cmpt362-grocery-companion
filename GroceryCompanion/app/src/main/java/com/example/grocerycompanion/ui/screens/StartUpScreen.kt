@@ -35,7 +35,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -47,7 +46,8 @@ import com.example.grocerycompanion.R
 fun StartUpScreen(
     modifier: Modifier = Modifier,
     onSearch: (SearchInput) -> Unit,
-    onScanBarcodeClick: () -> Unit
+    onScanBarcodeClick: () -> Unit,
+    onOpenItemList: () -> Unit = {}
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -134,7 +134,7 @@ fun StartUpScreen(
         }
 
 
-        // ── Bottom section ─────────────────────────────────────────────
+        // ── Bottom section ──
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -149,10 +149,16 @@ fun StartUpScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Compare prices instantly.",
+                "Compare prices instantly",
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
+            Spacer(Modifier.height(36.dp))
+
+            Button(onClick = onOpenItemList) {
+                Text("Open Item List")
+            }
+
             Spacer(Modifier.height(12.dp))
         }
     }
