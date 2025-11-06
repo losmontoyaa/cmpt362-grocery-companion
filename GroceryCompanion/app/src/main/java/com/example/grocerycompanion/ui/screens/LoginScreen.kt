@@ -27,6 +27,7 @@ import com.example.grocerycompanion.R
 @Composable
 fun LoginScreen(
     onLogin: (String, String) -> Unit,
+    onForgotPassword: () -> Unit,
     onGoToSignUp: () -> Unit = {}
 ) {
 
@@ -87,7 +88,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Text(text = "Forgot Password?", modifier = Modifier.clickable {
-
+            onForgotPassword() // triggers ForgotPassword Screen
         })
 
         Spacer(modifier = Modifier.height(16.dp))
