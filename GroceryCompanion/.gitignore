@@ -15,3 +15,5 @@ shelf/
 # === OS junk ===
 .DS_Store
 Thumbs.db
+
+app/google-services.json
