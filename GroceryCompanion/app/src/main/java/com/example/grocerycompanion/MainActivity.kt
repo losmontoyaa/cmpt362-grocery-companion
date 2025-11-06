@@ -1,47 +1,41 @@
 package com.example.grocerycompanion
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.grocerycompanion.ui.theme.GroceryCompanionTheme
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
+import com.example.grocerycompanion.databinding.ActivityMainBinding
+import com.example.grocerycompanion.ui.item.ItemListFragment
+import com.example.grocerycompanion.ui.list.ShoppingListFragment
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+    private lateinit var b: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            GroceryCompanionTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+        b = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(b.root)
+
+        supportFragmentManager.commit {
+            replace(b.fragmentContainer.id, ItemListFragment()) // start on list
+        }
+        b.bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.menu_item -> {
+                    supportFragmentManager.commit {
+                        replace(b.fragmentContainer.id, ItemListFragment())
+                    }
+                    true
                 }
+                R.id.menu_list -> {
+                    supportFragmentManager.commit {
+                        replace(b.fragmentContainer.id, ShoppingListFragment())
+                    }
+                    true
+                }
+                else -> false
             }
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GroceryCompanionTheme {
-        Greeting("Android")
+        b.bottomNav.selectedItemId = R.id.menu_item
     }
 }
