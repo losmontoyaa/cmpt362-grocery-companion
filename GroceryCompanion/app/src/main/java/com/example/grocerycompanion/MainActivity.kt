@@ -22,6 +22,7 @@ import com.example.grocerycompanion.ui.screens.StartUpScreen
 import com.example.grocerycompanion.ui.theme.GroceryCompanionTheme
 import com.google.firebase.auth.FirebaseAuth
 import androidx.fragment.app.FragmentActivity
+import com.example.grocerycompanion.ui.screens.Profile
 import com.example.grocerycompanion.ui.screens.XmlGokuHostScreen
 
 // Simple 3-state auth flow
@@ -54,15 +55,32 @@ private fun AppRoot() {
 
             // NEW toggle state
             var showGokuFlow by remember { mutableStateOf(false) }
+            var showProfile by remember { mutableStateOf(false) }
 
-            if (showGokuFlow) {
-                XmlGokuHostScreen(onExit = { showGokuFlow = false })
-            } else {
-                StartUpScreen(
-                    onSearch = { _: SearchInput -> },
-                    onScanBarcodeClick = { },
-                    onOpenItemList = { showGokuFlow = true }   // your button triggers this
-                )
+            when {
+                showProfile -> {
+                    Profile(
+                        onBack = { showProfile = false },
+                        onSignOut = {
+                            auth.signOut()
+                            isLoggedIn = false
+                            showProfile = false
+                        }
+                    )
+                }
+
+
+                showGokuFlow -> {
+                    XmlGokuHostScreen(onExit = { showGokuFlow = false })
+                }
+                else -> {
+                    StartUpScreen(
+                        onSearch = { _: SearchInput -> },
+                        onScanBarcodeClick = { },
+                        onOpenItemList = { showGokuFlow = true },   // your button triggers this
+                        onOpenProfile = { showProfile = true }
+                    )
+                }
             }
 
         } else {

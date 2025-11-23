@@ -4,7 +4,7 @@
             "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-75:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\ae5aac0a9491082e04777a4f2f5319d1\\transformed\\material-1.12.0\\res\\values-v24\\values-v24.xml",
+                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\781cf389b706ed23925c5857ee174932\\transformed\\material-1.12.0\\res\\values-v24\\values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,9,12,15",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\ee0ff895fbd732dfcde84d490053507d\\transformed\\appcompat-1.6.1\\res\\values-v24\\values-v24.xml",
+                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\c5bdbf3a8d53db87aaddba497daa1f26\\transformed\\appcompat-1.6.1\\res\\values-v24\\values-v24.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

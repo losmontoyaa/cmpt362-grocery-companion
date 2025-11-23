@@ -96,6 +96,10 @@
         "source": "com.example.grocerycompanion.app-main-79:/drawable/login_image.png"
     },
     {
+        "merged": "com.example.grocerycompanion.app-debug-77:/drawable_profile_button_icon.png.flat",
+        "source": "com.example.grocerycompanion.app-main-79:/drawable/profile_button_icon.png"
+    },
+    {
         "merged": "com.example.grocerycompanion.app-debug-77:/layout_activity_main.xml.flat",
         "source": "com.example.grocerycompanion.app-main-79:/layout/activity_main.xml"
     },

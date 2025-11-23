@@ -1,6 +1,7 @@
 package com.example.grocerycompanion.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,7 +48,8 @@ fun StartUpScreen(
     modifier: Modifier = Modifier,
     onSearch: (SearchInput) -> Unit,
     onScanBarcodeClick: () -> Unit,
-    onOpenItemList: () -> Unit = {}
+    onOpenItemList: () -> Unit = {},
+    onOpenProfile: () -> Unit = {}
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -65,6 +67,20 @@ fun StartUpScreen(
             modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.profile_button_icon),
+                    contentDescription = "Profile",
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clickable { onOpenProfile() },
+                    tint = Color.Unspecified
+                )
+            }
 
             Spacer(Modifier.height(48.dp))
 
