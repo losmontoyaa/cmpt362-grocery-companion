@@ -1,0 +1,10 @@
+<resources>
+    <!-- Brand -->
+    <color name="brand_primary">#16A34A</color>      <!-- Green -->
+    <color name="brand_secondary">#7C3AED</color>    <!-- Violet -->
+    <color name="brand_accent">#FACC15</color>       <!-- Yellow -->
+
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+
+</resources>
