@@ -16,6 +16,7 @@
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAdPUK70GC7Y2hwoXv0PP_r5bUNSQ8Qyeo</string>
     <string name="google_storage_bucket" translatable="false">grocery-companion-9920c.firebasestorage.app</string>
     <string name="project_id" translatable="false">grocery-companion-9920c</string>
+    <string name="title_activity_rating_test">RatingTestActivity</string>
     <style name="Theme.GroceryCompanion" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         
         <item name="android:statusBarColor">@color/brand_primary</item>

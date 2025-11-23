@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GroceryCompanion</string>
+    <string name="title_activity_rating_test">RatingTestActivity</string>
 </resources>

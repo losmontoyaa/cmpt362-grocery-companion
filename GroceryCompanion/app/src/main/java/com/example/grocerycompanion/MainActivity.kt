@@ -23,6 +23,7 @@ import com.example.grocerycompanion.ui.theme.GroceryCompanionTheme
 import com.google.firebase.auth.FirebaseAuth
 import androidx.fragment.app.FragmentActivity
 import com.example.grocerycompanion.ui.screens.XmlGokuHostScreen
+import com.google.firebase.BuildConfig
 
 // Simple 3-state auth flow
 private enum class AuthScreen { Login, SignUp, Forgot }
@@ -44,6 +45,9 @@ private fun AppRoot() {
         var isLoggedIn by remember { mutableStateOf(false) }
         var authScreen by remember { mutableStateOf(AuthScreen.Login) }
         val auth = remember { FirebaseAuth.getInstance() }
+
+        // TODO: Remove
+        isLoggedIn = true
 
         // Auto-enter if already signed in
         LaunchedEffect(Unit) {

@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-75:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
+            "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-73:/values-w320dp-land-v13/values-w320dp-land-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\ae5aac0a9491082e04777a4f2f5319d1\\transformed\\material-1.12.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
+                    "source": "C:\\Users\\Jason\\.gradle\\caches\\8.13\\transforms\\a4f1207249757f3f62c903e04e6d3fd1\\transformed\\material-1.12.0\\res\\values-w320dp-land-v13\\values-w320dp-land-v13.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
