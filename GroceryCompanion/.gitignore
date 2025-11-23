@@ -1,0 +1,13 @@
+# Google Services key (VERY IMPORTANT)
+app/google-services.json
+
+# Build folders
+**/build/
+**/out/
+.gradle/
+.idea/
+local.properties
+
+# Android specific
+*.iml
+.DS_Store
