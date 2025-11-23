@@ -1,0 +1,14 @@
+# Android Build
+**/build/
+**/out/
+**/captures/
+**/generated/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+.gradle/
+local.properties
+
+# Firebase key
+app/google-services.json

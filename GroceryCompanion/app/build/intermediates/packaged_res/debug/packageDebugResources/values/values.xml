@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_accent">#FACC15</color>
+    <color name="brand_primary">#16A34A</color>
+    <color name="brand_secondary">#7C3AED</color>
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <string name="app_name">GroceryCompanion</string>
+    <string name="gcm_defaultSenderId" translatable="false">1092938723273</string>
+    <string name="google_api_key" translatable="false">AIzaSyAdPUK70GC7Y2hwoXv0PP_r5bUNSQ8Qyeo</string>
+    <string name="google_app_id" translatable="false">1:1092938723273:android:76061966f09f0b0bda4218</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAdPUK70GC7Y2hwoXv0PP_r5bUNSQ8Qyeo</string>
+    <string name="google_storage_bucket" translatable="false">grocery-companion-9920c.firebasestorage.app</string>
+    <string name="project_id" translatable="false">grocery-companion-9920c</string>
+    <style name="Theme.GroceryCompanion" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        
+        <item name="android:statusBarColor">@color/brand_primary</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+
+        
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorSecondary">@color/brand_secondary</item>
+
+        
+        <item name="android:windowBackground">@android:color/white</item>
+
+    </style>
+</resources>
