@@ -47,6 +47,7 @@ fun StartUpScreen(
     modifier: Modifier = Modifier,
     onSearch: (SearchInput) -> Unit,
     onScanBarcodeClick: () -> Unit,
+    onScanReceiptClick: () -> Unit,
     onOpenItemList: () -> Unit = {}
 ) {
 
@@ -130,6 +131,18 @@ fun StartUpScreen(
                 Icon(Icons.Filled.CameraAlt, null)
                 Spacer(Modifier.width(8.dp))
                 Text("Scan Barcode Lookup")
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            Button(
+                onClick = onScanReceiptClick,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+                Icon(Icons.Filled.CameraAlt, null)
+                Spacer(Modifier.width(8.dp))
+                Text("Scan Receipt")
             }
         }
 

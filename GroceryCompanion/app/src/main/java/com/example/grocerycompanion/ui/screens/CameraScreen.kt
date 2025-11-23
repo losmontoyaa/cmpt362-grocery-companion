@@ -1,14 +1,8 @@
 package com.example.grocerycompanion.ui.screens
 
 import android.annotation.SuppressLint
-import android.os.Build
-import android.view.ViewGroup
-import androidx.annotation.OptIn
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageProxy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.*
@@ -17,15 +11,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+
+
+
 
 @SuppressLint("UnsafeOptInUsageError")
 @Composable
 fun CameraScreen(
     modifier: Modifier = Modifier,
-    onBarcodeScanned: (String) -> Unit,
+    onInfoScanned: (String) -> Unit,
     onClose: () -> Unit
 ) {
     val context = LocalContext.current
@@ -47,9 +45,7 @@ fun CameraScreen(
                         setSurfaceProvider(previewView.surfaceProvider)
                     }
 
-                // --- BARCODE ANALYZER ---
-                val scanner = BarcodeScanning.getClient()
-
+                // Image analysis
                 val analysis = ImageAnalysis.Builder()
                     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
@@ -58,24 +54,26 @@ fun CameraScreen(
                     ContextCompat.getMainExecutor(ctx)
                 ) { imageProxy ->
                     val mediaImage = imageProxy.image
-                    if (mediaImage != null) {
-                        val img = InputImage.fromMediaImage(
-                            mediaImage,
-                            imageProxy.imageInfo.rotationDegrees
-                        )
-                        scanner.process(img)
-                            .addOnSuccessListener { barcodes ->
-                                val code = barcodes.firstOrNull()?.rawValue
-                                if (code != null) {
-                                    onBarcodeScanned(code)
-                                }
-                            }
-                            .addOnCompleteListener {
-                                imageProxy.close()
-                            }
-                    } else {
+                    if (mediaImage == null) {
                         imageProxy.close()
+                        return@setAnalyzer
                     }
+
+                    val img = InputImage.fromMediaImage(
+                        mediaImage,
+                        imageProxy.imageInfo.rotationDegrees
+                    )
+
+                    val barcodeScanner = BarcodeScanning.getClient()
+                    barcodeScanner.process(img)
+                        .addOnSuccessListener { barcodes ->
+                            val code = barcodes.firstOrNull()?.rawValue
+                            if (code != null) {
+                                onInfoScanned(code)
+                            }
+                        }
+                        .addOnCompleteListener { imageProxy.close() }
+
                 }
 
                 try {

@@ -2,15 +2,15 @@ package com.example.grocerycompanion
 
 import android.Manifest
 import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -22,24 +22,35 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.FileProvider
 import com.example.grocerycompanion.ui.screens.ForgotPassword
 import com.example.grocerycompanion.ui.screens.LoginScreen
-import com.example.grocerycompanion.ui.screens.SearchInput
 import com.example.grocerycompanion.ui.screens.SignUpPage
 import com.example.grocerycompanion.ui.screens.StartUpScreen
 import com.example.grocerycompanion.ui.theme.GroceryCompanionTheme
 import com.google.firebase.auth.FirebaseAuth
 import androidx.fragment.app.FragmentActivity
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.OpenAI
 import com.example.grocerycompanion.ui.screens.CameraScreen
 import com.example.grocerycompanion.ui.screens.XmlGokuHostScreen
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.example.grocerycompanion.BuildConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+import java.io.File
 
 // Simple 3-state auth flow
 private enum class AuthScreen { Login, SignUp, Forgot }
 
 class MainActivity : FragmentActivity() {
-
-    private val cameraPermission = Manifest.permission.CAMERA
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +71,11 @@ private fun AppRoot() {
         var authScreen by remember { mutableStateOf(AuthScreen.Login) }
         val auth = remember { FirebaseAuth.getInstance() }
 
-        var showCamera by remember { mutableStateOf(false) }
+        var showBarcodeCamera by remember { mutableStateOf(false) }
+
+        var showReceiptCamera by remember { mutableStateOf(false) }
+        var receiptPhotoUri by remember { mutableStateOf<Uri?>(null) }
+
         var showGokuFlow by remember { mutableStateOf(false) }
 
         // Auto login if Firebase already has a user
@@ -89,36 +104,60 @@ private fun AppRoot() {
                 }
             }
 
+            val receiptCameraLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) {
+                success ->
+                if (success && receiptPhotoUri != null){
+                    //Receipt photo taken! Now analyze it.
+                    extractReceipt(ctx, receiptPhotoUri!!)
+                    showReceiptCamera = false
+                }
+                else
+                    showReceiptCamera = false
+
+            }
+
             // ---- NAVIGATION FLOW ----
             when {
                 showGokuFlow -> {
                     XmlGokuHostScreen(onExit = { showGokuFlow = false })
                 }
 
-                showCamera && hasPermission -> {
+                showBarcodeCamera && hasPermission -> {
                     CameraScreen(
                         Modifier.fillMaxSize(),
-                        onBarcodeScanned = { code ->
-                            showCamera = false
+                        onInfoScanned = { code ->
+                            showBarcodeCamera = false
                             println("DEBUG: Barcode scanned: $code")
                             val searchIntent = Intent(Intent.ACTION_WEB_SEARCH).apply {
                                 putExtra(SearchManager.QUERY, code)
                             }
                             ctx.startActivity(searchIntent)
-
                         },
-                        onClose = { showCamera = false }
+                        onClose = { showBarcodeCamera = false }
                     )
+                }
+
+                showReceiptCamera && hasPermission ->{
+                    LaunchedEffect(Unit) {
+                        val photoFile = File(ctx.cacheDir, "receipt_${System.currentTimeMillis()}.jpg")
+                        val photoUri = FileProvider.getUriForFile(ctx, "com.example.grocerycompanion.fileprovider", photoFile)
+
+                        receiptPhotoUri = photoUri
+                        receiptCameraLauncher.launch(photoUri)
+                    }
+
                 }
 
                 else -> {
                     StartUpScreen(
                         onSearch = { },
-                        onScanBarcodeClick = { showCamera = true },
+                        onScanBarcodeClick = { showBarcodeCamera = true },
+                        onScanReceiptClick = { showReceiptCamera = true },
                         onOpenItemList = { showGokuFlow = true }
                     )
                 }
             }
+
         }
 
         else {
@@ -158,6 +197,26 @@ private fun AppRoot() {
                 }
             }
         }
+
     }
+
+
 }
+
+private fun extractReceipt(context: Context, uri: Uri){
+    val image = InputImage.fromFilePath(context, uri)
+    val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    recognizer.process(image).addOnSuccessListener { visionText ->
+        val resultText = visionText.text
+        println("DEBUG: Receipt text: $resultText")
+    }
+    .addOnFailureListener { e ->
+        e.printStackTrace()
+    }
+
+}
+
+
+
+
 

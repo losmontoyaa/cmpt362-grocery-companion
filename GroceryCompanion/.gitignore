@@ -1,0 +1,19 @@
+# === Android / Gradle ===
+/local.properties
+/.gradle/
+/**/build/
+/captures/
+/.externalNativeBuild/
+
+# === IntelliJ / Android Studio ===
+/.idea/
+/*.iml
+*.log
+workspace.xml
+shelf/
+
+# === OS junk ===
+.DS_Store
+Thumbs.db
+
+app/google-services.json
