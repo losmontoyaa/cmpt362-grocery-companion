@@ -70,7 +70,7 @@ fun StartUpScreen(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.Start
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.profile_button_icon),
