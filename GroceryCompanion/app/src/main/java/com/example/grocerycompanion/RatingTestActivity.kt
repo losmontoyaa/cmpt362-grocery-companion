@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.grocerycompanion.model.RatingViewModel
 import com.example.grocerycompanion.ui.rating.NewRatingScreen
 import com.example.grocerycompanion.ui.rating.RatingSection
@@ -19,7 +20,7 @@ class RatingTestActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GroceryCompanionTheme {
-                val viewModel = RatingViewModel()
+                val viewModel = viewModel<RatingViewModel>()
                 val testItemId = "LD01"   // test ID
 
                 var selectedStars by remember { mutableStateOf<Int?>(null) }
