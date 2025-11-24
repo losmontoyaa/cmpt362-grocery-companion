@@ -1,3 +1,4 @@
+// ui/list/ShoppingListScreen.kt
 package com.example.grocerycompanion.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
@@ -5,14 +6,13 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,23 +21,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
-import com.google.firebase.auth.FirebaseAuth
-import com.example.grocerycompanion.model.Item
 import com.example.grocerycompanion.model.ShoppingListItem
-import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.repo.FirebasePriceRepo
 import com.example.grocerycompanion.repo.FirebaseShoppingListRepo
 import com.example.grocerycompanion.repo.FirebaseStoreRepo
 import com.example.grocerycompanion.util.ViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 @Composable
 fun ShoppingListScreen() {
+    // ✅ Use Firebase user (or demo fallback)
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "demoUser"
 
     val vm: ShoppingListViewModel = viewModel(
@@ -50,21 +47,16 @@ fun ShoppingListScreen() {
         }
     )
 
-    // 🔹 All shopping list items (itemId + qty)
     val items by vm.list.collectAsState()
+    val isLoading by vm.isLoading.collectAsState()
+    val errorMessage by vm.errorMessage.collectAsState()
 
-    // 🔹 All item metadata from Firestore (for name/brand/img/category)
-    val itemRepo = remember { FirebaseItemRepo() }
-    val allItems by itemRepo.streamAll().collectAsState(initial = emptyList())
-    val itemMap = remember(allItems) { allItems.associateBy { it.id } }
-
-    // 🔹 Store totals + per-item cheapest (computed in VM)
     var storeTotals by remember { mutableStateOf<List<StoreTotal>>(emptyList()) }
     var perItemRecs by remember { mutableStateOf<Map<String, ItemPickUi>>(emptyMap()) }
 
     val scope = rememberCoroutineScope()
 
-    // 🔁 Recompute whenever the shopping list changes
+    // 🔁 Auto recompute totals & per-item recommendations whenever list changes
     LaunchedEffect(items) {
         if (items.isNotEmpty()) {
             val totals = vm.computePerStoreTotals()
@@ -85,7 +77,7 @@ fun ShoppingListScreen() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // ---------- HEADER ----------
+            // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -104,26 +96,30 @@ fun ShoppingListScreen() {
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // ---------- REFRESH BUTTON (manual) ----------
-            FilledTonalButton(
-                onClick = {
-                    scope.launch {
-                        val totals = vm.computePerStoreTotals()
-                        storeTotals = totals
-                        perItemRecs = vm.computePerItemCheapestUi()
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = items.isNotEmpty()
-            ) {
-                Text("Refresh totals")
-            }
-
             Spacer(modifier = Modifier.height(8.dp))
 
-            // ---------- BEST OVERALL STORE HERO CARD ----------
+            // Loading / error states
+            if (isLoading && items.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            errorMessage?.let { msg ->
+                Text(
+                    text = msg,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+
+            // ⭐ Hero "Best overall store"
             val bestStore = storeTotals.firstOrNull()
 
             AnimatedVisibility(visible = bestStore != null) {
@@ -170,7 +166,7 @@ fun ShoppingListScreen() {
                 }
             }
 
-            // ---------- OTHER STORE OPTIONS ----------
+            // Other store options
             if (storeTotals.size > 1) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Card(
@@ -204,8 +200,8 @@ fun ShoppingListScreen() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // ---------- LIST CONTENT ----------
-            if (items.isEmpty()) {
+            // List content
+            if (items.isEmpty() && !isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -222,12 +218,9 @@ fun ShoppingListScreen() {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(items, key = { it.itemId }) { sli ->
-                        val meta = itemMap[sli.itemId]
                         val pickUi = perItemRecs[sli.itemId]
-
                         ShoppingListRow(
                             item = sli,
-                            meta = meta,
                             recommendation = pickUi,
                             onRemove = { id ->
                                 scope.launch { vm.remove(id) }
@@ -246,20 +239,18 @@ fun ShoppingListScreen() {
 @Composable
 private fun ShoppingListRow(
     item: ShoppingListItem,
-    meta: Item?,
     recommendation: ItemPickUi?,
     onRemove: (String) -> Unit,
     onQtyChange: (String, Int) -> Unit
 ) {
-    val displayName = meta?.name ?: item.itemId
-    val brand = meta?.brand.orEmpty()
-    val category = meta?.category.orEmpty()
-    val imgUrl = meta?.imgUrl
+    // ❗ item.itemId IS THE BARCODE NOW (e.g. 068700115004)
+    // We no longer have InMemoryDataSource here.
+    val displayName = item.itemId
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .animateContentSize(), // smooth resize on qty changes
+            .animateContentSize(),
         elevation = CardDefaults.cardElevation(2.dp),
         shape = MaterialTheme.shapes.medium
     ) {
@@ -268,17 +259,6 @@ private fun ShoppingListRow(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Thumbnail
-            AsyncImage(
-                model = imgUrl,
-                contentDescription = displayName,
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(10.dp))
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -288,63 +268,39 @@ private fun ShoppingListRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (brand.isNotBlank()) {
-                    Text(
-                        text = brand,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                if (category.isNotBlank()) {
-                    Text(
-                        text = category,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                }
                 if (recommendation != null) {
                     Text(
-                        text = "Best at ${recommendation.storeName} — $${"%.2f".format(recommendation.price)}",
+                        text = "Best: ${recommendation.storeName} — $${"%.2f".format(recommendation.price)}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
             }
 
-            // Qty controls + delete
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+            IconButton(
+                onClick = { if (item.qty > 1) onQtyChange(item.itemId, item.qty - 1) },
+                enabled = item.qty > 1
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = { if (item.qty > 1) onQtyChange(item.itemId, item.qty - 1) },
-                        enabled = item.qty > 1
-                    ) {
-                        Icon(Icons.Filled.Remove, contentDescription = "Decrease")
-                    }
+                Icon(Icons.Filled.Remove, contentDescription = "Decrease")
+            }
 
-                    Text(
-                        text = item.qty.toString(),
-                        modifier = Modifier.width(24.dp),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+            Text(
+                text = item.qty.toString(),
+                modifier = Modifier.width(32.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
 
-                    IconButton(
-                        onClick = { onQtyChange(item.itemId, item.qty + 1) }
-                    ) {
-                        Icon(Icons.Filled.Add, contentDescription = "Increase")
-                    }
-                }
+            IconButton(
+                onClick = { onQtyChange(item.itemId, item.qty + 1) }
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Increase")
+            }
 
-                IconButton(
-                    onClick = { onRemove(item.itemId) }
-                ) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Remove")
-                }
+            IconButton(
+                onClick = { onRemove(item.itemId) }
+            ) {
+                Icon(Icons.Filled.Delete, contentDescription = "Remove")
             }
         }
     }

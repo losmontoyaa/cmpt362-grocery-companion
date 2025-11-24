@@ -30,47 +30,47 @@
 19-->[com.google.android.recaptcha:recaptcha:18.4.0] C:\Users\miche\.gradle\caches\8.13\transforms\044f4a266d8b7d1fb517dd2d9f76aa32\transformed\recaptcha-18.4.0\AndroidManifest.xml:9:22-95
 20
 21    <application
-21-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:5:5-25:19
+21-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:5:5-25:19
 22        android:allowBackup="true"
-22-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:6:9-35
+22-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:6:9-35
 23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 23-->[androidx.core:core:1.17.0] C:\Users\miche\.gradle\caches\8.13\transforms\a729d0b8908cf6daa89192c37f5c50c4\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
 24        android:dataExtractionRules="@xml/data_extraction_rules"
-24-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:7:9-65
+24-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:7:9-65
 25        android:debuggable="true"
 26        android:extractNativeLibs="false"
 27        android:fullBackupContent="@xml/backup_rules"
-27-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:8:9-54
+27-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:8:9-54
 28        android:icon="@mipmap/ic_launcher"
-28-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:9:9-43
+28-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:9:9-43
 29        android:label="@string/app_name"
-29-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:10:9-41
+29-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:10:9-41
 30        android:roundIcon="@mipmap/ic_launcher_round"
-30-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:11:9-54
+30-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:11:9-54
 31        android:supportsRtl="true"
-31-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:12:9-35
+31-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:12:9-35
 32        android:testOnly="true"
 33        android:theme="@style/Theme.GroceryCompanion" >
-33-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:13:9-54
+33-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:13:9-54
 34        <activity
-34-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:14:9-24:20
+34-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:14:9-24:20
 35            android:name="com.example.grocerycompanion.MainActivity"
-35-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:15:13-41
+35-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:15:13-41
 36            android:exported="true"
-36-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:16:13-36
+36-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:16:13-36
 37            android:label="@string/app_name"
-37-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:17:13-45
+37-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:17:13-45
 38            android:theme="@style/Theme.GroceryCompanion" >
-38-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:18:13-58
+38-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:18:13-58
 39            <intent-filter>
-39-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:19:13-23:29
+39-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:19:13-23:29
 40                <action android:name="android.intent.action.MAIN" />
-40-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:17-69
-40-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:25-66
+40-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:17-69
+40-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:25-66
 41
 42                <category android:name="android.intent.category.LAUNCHER" />
-42-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:17-77
-42-->C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:27-74
+42-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:17-77
+42-->C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:27-74
 43            </intent-filter>
 44        </activity>
 45

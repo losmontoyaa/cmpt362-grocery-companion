@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,6 +26,7 @@ import com.example.grocerycompanion.repo.FirebaseStoreRepo
 import com.example.grocerycompanion.util.ViewModelFactory
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemDetailScreen(
     itemId: String,
@@ -33,14 +35,15 @@ fun ItemDetailScreen(
     val context = LocalContext.current
 
     val vm: ItemViewModel = viewModel(
-        key = "item-$itemId",   // ensures each item gets its own VM instance
+        key = "item-$itemId",   // one VM per item
         factory = ViewModelFactory {
             ItemViewModel(
                 itemId = itemId,
                 itemRepo = FirebaseItemRepo(),
                 priceRepo = FirebasePriceRepo(),
                 storeRepo = FirebaseStoreRepo(),
-                listRepo = FirebaseShoppingListRepo(userId = "demoUser") // TODO: real uid
+                // TODO: replace with real user ID from FirebaseAuth when ready
+                listRepo = FirebaseShoppingListRepo(userId = "demoUser")
             )
         }
     )
@@ -56,184 +59,162 @@ fun ItemDetailScreen(
     var qty by remember { mutableStateOf(1) }
     val scope = rememberCoroutineScope()
 
-    var editingPrice by remember { mutableStateOf<Price?>(null) }
-    var newPriceText by remember { mutableStateOf("") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Top row with back
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextButton(onClick = onBack) {
-                Text("< Back")
-            }
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = item?.name ?: "Item details",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
         }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            item?.let { it ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
+                    Column {
+                        AsyncImage(
+                            model = it.imgUrl,
+                            contentDescription = it.name,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
+                }
 
-        item?.let { it ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
-                Column {
-                    AsyncImage(
-                        model = it.imgUrl,
-                        contentDescription = it.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
+                Text(
+                    text = it.name,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+
+                if (it.brand.isNotBlank()) {
+                    Text(
+                        text = it.brand,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            }
 
-            Text(
-                text = it.name,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(top = 12.dp)
-            )
-            if (it.brand.isNotBlank()) {
                 Text(
-                    text = it.brand,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "${"%.1f".format(it.avgRating)} ★ (${it.ratingsCount} ratings)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
 
-            Text(
-                text = "${"%.1f".format(it.avgRating)} ★ (${it.ratingsCount} ratings)",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-        }
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Qty + Add to list
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Qty",
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-
-            OutlinedButton(onClick = { if (qty > 1) qty-- }) {
-                Text("-")
-            }
-            Text(
-                text = qty.toString(),
-                modifier = Modifier
-                    .width(32.dp)
-                    .wrapContentWidth(Alignment.CenterHorizontally),
-            )
-            OutlinedButton(onClick = { if (qty < 99) qty++ }) {
-                Text("+")
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        vm.addToList(qty)
-                        Toast.makeText(
-                            context,
-                            "Added $qty to list",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                },
-                modifier = Modifier.weight(1f)
+            // Qty + Add to list
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Add to List")
-            }
-        }
+                Text(
+                    text = "Qty",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.width(8.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+                OutlinedButton(onClick = { if (qty > 1) qty-- }) {
+                    Text("-")
+                }
+                Text(
+                    text = qty.toString(),
+                    modifier = Modifier
+                        .width(32.dp)
+                        .wrapContentWidth(Alignment.CenterHorizontally),
+                )
+                OutlinedButton(onClick = { if (qty < 99) qty++ }) {
+                    Text("+")
+                }
 
-        Text(
-            text = "Prices by Store",
-            style = MaterialTheme.typography.titleMedium
-        )
+                Spacer(modifier = Modifier.width(12.dp))
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-        ) {
-            items(storePrices, key = { (p, _, _) -> p.storeId }) { (price, store, isCheapest) ->
-                StorePriceRow(
-                    price = price,
-                    store = store,
-                    isCheapest = isCheapest,
-                    onQuickAdd = {
+                Button(
+                    onClick = {
                         scope.launch {
-                            vm.addToList(1)
+                            vm.addToList(qty)
                             Toast.makeText(
                                 context,
-                                "Added to list",
+                                "Added $qty to list",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    }
-                )
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Add to List")
+                }
             }
-        }
 
-        // Edit price dialog
-        if (editingPrice != null) {
-            AlertDialog(
-                onDismissRequest = { editingPrice = null },
-                title = { Text("Update price") },
-                text = {
-                    Column {
-                        Text(
-                            "Store: " + storePrices
-                                .firstOrNull { it.first == editingPrice }
-                                ?.second
-                                ?.name.orEmpty()
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        OutlinedTextField(
-                            value = newPriceText,
-                            onValueChange = { newPriceText = it },
-                            label = { Text("New price") },
-                            singleLine = true
-                        )
-                    }
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            val p = editingPrice ?: return@TextButton
-                            val parsed = newPriceText.toDoubleOrNull()
-                            if (parsed != null) {
-                                vm.updatePrice(p.storeId, parsed)
-                                Toast.makeText(
-                                    context,
-                                    "Price updated",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Prices by Store",
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            if (storePrices.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No price data yet.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                ) {
+                    items(storePrices) { (price, store, isCheapest) ->
+                        StorePriceRow(
+                            price = price,
+                            store = store,
+                            isCheapest = isCheapest,
+                            onQuickAdd = {
+                                scope.launch {
+                                    vm.addToList(1)
+                                    Toast.makeText(
+                                        context,
+                                        "Added to list",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
-                            editingPrice = null
-                        }
-                    ) {
-                        Text("Save")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { editingPrice = null }) {
-                        Text("Cancel")
+                        )
                     }
                 }
-            )
+            }
         }
     }
 }
@@ -269,6 +250,8 @@ private fun StorePriceRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                // 🔹 adapt to your new Price model:
+                // if you renamed fields to totalPrice / unitPrice, update this accordingly
                 Text(
                     text = "$${"%.2f".format(price.price)} ${price.unit}",
                     style = MaterialTheme.typography.bodyMedium,
@@ -292,3 +275,4 @@ private fun StorePriceRow(
         }
     }
 }
+

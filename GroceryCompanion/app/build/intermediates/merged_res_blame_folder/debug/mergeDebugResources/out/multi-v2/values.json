@@ -110,25 +110,6 @@
                     }
                 },
                 {
-                    "source": "C:\\cmpt362-grocery-companion\\cmpt362-grocery-companion\\GroceryCompanion\\app\\src\\main\\res\\values\\styles.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "17",
-                        "endLines": "14",
-                        "endColumns": "12",
-                        "endOffsets": "649"
-                    },
-                    "to": {
-                        "startLines": "6499",
-                        "startColumns": "4",
-                        "startOffsets": "457233",
-                        "endLines": "6512",
-                        "endColumns": "12",
-                        "endOffsets": "457719"
-                    }
-                },
-                {
                     "source": "C:\\Users\\miche\\.gradle\\caches\\8.13\\transforms\\973e4b8de2bf3a0acce9a9d19cba48f8\\transformed\\drawerlayout-1.1.1\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5",
@@ -271,23 +252,6 @@
                     }
                 },
                 {
-                    "source": "C:\\cmpt362-grocery-companion\\cmpt362-grocery-companion\\GroceryCompanion\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "17",
-                        "endColumns": "53",
-                        "endOffsets": "66"
-                    },
-                    "to": {
-                        "startLines": "1951",
-                        "startColumns": "4",
-                        "startOffsets": "130578",
-                        "endColumns": "53",
-                        "endOffsets": "130627"
-                    }
-                },
-                {
                     "source": "C:\\Users\\miche\\.gradle\\caches\\8.13\\transforms\\eb799693438507493bf57263c2fa9ade\\transformed\\coordinatorlayout-1.2.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,6,16",
@@ -345,40 +309,6 @@
                     }
                 },
                 {
-                    "source": "C:\\cmpt362-grocery-companion\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\generated\\res\\processDebugGoogleServices\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "55,138,242,352,472,587",
-                        "endColumns": "82,103,109,119,114,83",
-                        "endOffsets": "133,237,347,467,582,666"
-                    },
-                    "to": {
-                        "startLines": "2006,2007,2008,2009,2010,2192",
-                        "startColumns": "4,4,4,4,4,4",
-                        "startOffsets": "136450,136533,136637,136747,136867,158495",
-                        "endColumns": "82,103,109,119,114,83",
-                        "endOffsets": "136528,136632,136742,136862,136977,158574"
-                    }
-                },
-                {
-                    "source": "C:\\cmpt362-grocery-companion\\cmpt362-grocery-companion\\GroceryCompanion\\app\\src\\main\\res\\values\\colors.xml",
-                    "from": {
-                        "startLines": "4,2,3,6,7",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "176,37,106,248,296",
-                        "endColumns": "46,47,49,46,48",
-                        "endOffsets": "218,80,151,290,340"
-                    },
-                    "to": {
-                        "startLines": "571,572,573,902,903",
-                        "startColumns": "4,4,4,4,4",
-                        "startOffsets": "29664,29711,29759,54242,54289",
-                        "endColumns": "46,47,49,46,48",
-                        "endOffsets": "29706,29754,29804,54284,54333"
-                    }
-                },
-                {
                     "source": "C:\\Users\\miche\\.gradle\\caches\\8.13\\transforms\\c9343234a2c30590626cd468f6368073\\transformed\\coil-base-2.6.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -427,6 +357,23 @@
                         "startOffsets": "130329,130411",
                         "endColumns": "81,83",
                         "endOffsets": "130406,130490"
+                    }
+                },
+                {
+                    "source": "C:\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\generated\\res\\processDebugGoogleServices\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,138,242,352,472,587",
+                        "endColumns": "82,103,109,119,114,83",
+                        "endOffsets": "133,237,347,467,582,666"
+                    },
+                    "to": {
+                        "startLines": "2006,2007,2008,2009,2010,2192",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "136450,136533,136637,136747,136867,158495",
+                        "endColumns": "82,103,109,119,114,83",
+                        "endOffsets": "136528,136632,136742,136862,136977,158574"
                     }
                 },
                 {
@@ -521,6 +468,23 @@
                     }
                 },
                 {
+                    "source": "C:\\cmpt362-grocery-companion\\GroceryCompanion\\app\\src\\main\\res\\values\\colors.xml",
+                    "from": {
+                        "startLines": "4,2,3,6,7",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "176,37,106,248,296",
+                        "endColumns": "46,47,49,46,48",
+                        "endOffsets": "218,80,151,290,340"
+                    },
+                    "to": {
+                        "startLines": "571,572,573,902,903",
+                        "startColumns": "4,4,4,4,4",
+                        "startOffsets": "29664,29711,29759,54242,54289",
+                        "endColumns": "46,47,49,46,48",
+                        "endOffsets": "29706,29754,29804,54284,54333"
+                    }
+                },
+                {
                     "source": "C:\\Users\\miche\\.gradle\\caches\\8.13\\transforms\\c0f0b90d3e6f8cf413ed3b15204fe1c5\\transformed\\ui-graphics-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -554,6 +518,23 @@
                         "endLines": "1781,9484,11728,11734",
                         "endColumns": "52,24,24,24",
                         "endOffsets": "120053,656211,755998,756240"
+                    }
+                },
+                {
+                    "source": "C:\\cmpt362-grocery-companion\\GroceryCompanion\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endColumns": "53",
+                        "endOffsets": "66"
+                    },
+                    "to": {
+                        "startLines": "1951",
+                        "startColumns": "4",
+                        "startOffsets": "130578",
+                        "endColumns": "53",
+                        "endOffsets": "130627"
                     }
                 },
                 {
@@ -704,6 +685,25 @@
                         "endLines": "1886,2032,2033,2034,2035,2036,2037,2038,2039,2040,2043,2044,2045,2046,2047,2048,2049,2050,2051,2052,2053,2056,2057,2058,2059,2060,2061,2062,2063,2064,2065,2066,2067,2068,2069,2070,2071,2072,2073,2074,2075,2076,2077,2078,2079,2080,2081,2082,2083,2084,2085,2086,2087,2088,2089,2090,2091,2092,5636,5639",
                         "endColumns": "72,87,85,80,83,68,64,82,105,85,13,53,68,60,68,88,94,73,96,92,97,13,90,87,95,97,63,67,86,93,66,71,71,100,108,75,68,47,65,63,73,56,56,71,49,53,70,70,69,68,57,75,70,73,85,49,69,64,12,12",
                         "endOffsets": "126061,139460,139546,139627,139711,139780,139845,139928,140034,140120,140240,140294,140363,140424,140493,140582,140677,140751,140848,140941,141039,141188,141279,141367,141463,141561,141625,141693,141780,141874,141941,142013,142085,142186,142295,142371,142440,142488,142554,142618,142692,142749,142806,142878,142928,142982,143053,143124,143194,143263,143321,143397,143468,143542,143628,143678,143748,143813,398907,399060"
+                    }
+                },
+                {
+                    "source": "C:\\cmpt362-grocery-companion\\GroceryCompanion\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endLines": "14",
+                        "endColumns": "12",
+                        "endOffsets": "649"
+                    },
+                    "to": {
+                        "startLines": "6499",
+                        "startColumns": "4",
+                        "startOffsets": "457233",
+                        "endLines": "6512",
+                        "endColumns": "12",
+                        "endOffsets": "457719"
                     }
                 }
             ]

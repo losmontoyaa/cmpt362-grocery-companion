@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
-INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
+ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
+INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:1-27:12
 MERGED from [androidx.databinding:viewbinding:8.13.0] C:\Users\miche\.gradle\caches\8.13\transforms\029ad22a23d40e38eec2b3a81b8e6142\transformed\viewbinding-8.13.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-common:2.8.3] C:\Users\miche\.gradle\caches\8.13\transforms\b03b8f607873955d753fc944dcd23d29\transformed\navigation-common-2.8.3\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-common-ktx:2.8.3] C:\Users\miche\.gradle\caches\8.13\transforms\3955670d4f14c14afc541796cbc33842\transformed\navigation-common-ktx-2.8.3\AndroidManifest.xml:2:1-7:12
@@ -14,6 +14,8 @@ MERGED from [androidx.navigation:navigation-fragment-ktx:2.8.3] C:\Users\miche\.
 MERGED from [androidx.navigation:navigation-ui-ktx:2.8.3] C:\Users\miche\.gradle\caches\8.13\transforms\bba880529a8f28fc6056f6aeab23af81\transformed\navigation-ui-ktx-2.8.3\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.navigation:navigation-ui:2.8.3] C:\Users\miche\.gradle\caches\8.13\transforms\2bf640a5d0a84a4daba5b79d18d64531\transformed\navigation-ui-2.8.3\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\miche\.gradle\caches\8.13\transforms\4924fbd19c23cedaec2e76806b50fab5\transformed\material-1.12.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.fragment:fragment-ktx:1.8.5] C:\Users\miche\.gradle\caches\8.13\transforms\e1ef4884c841d0ef91a03abe73ce5fd3\transformed\fragment-ktx-1.8.5\AndroidManifest.xml:2:1-7:12
+MERGED from [com.github.bumptech.glide:glide:4.16.0] C:\Users\miche\.gradle\caches\8.13\transforms\2d2c0ac361ad2d5f2718d75bd4e223d7\transformed\glide-4.16.0\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\miche\.gradle\caches\8.13\transforms\131ff0ecd2d1c592e6c34ff5acfde0e8\transformed\constraintlayout-2.0.1\AndroidManifest.xml:2:1-11:12
 MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\miche\.gradle\caches\8.13\transforms\693db443149acb59b170a4f21819600a\transformed\coil-compose-2.6.0\AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil-compose-base:2.6.0] C:\Users\miche\.gradle\caches\8.13\transforms\8cb02b949294b68bdc5f6e563006e9f5\transformed\coil-compose-base-2.6.0\AndroidManifest.xml:2:1-7:12
@@ -21,8 +23,6 @@ MERGED from [io.coil-kt:coil:2.6.0] C:\Users\miche\.gradle\caches\8.13\transform
 MERGED from [io.coil-kt:coil-base:2.6.0] C:\Users\miche\.gradle\caches\8.13\transforms\c9343234a2c30590626cd468f6368073\transformed\coil-base-2.6.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\miche\.gradle\caches\8.13\transforms\ccf32c9af056b98c64d387303ecf5891\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\miche\.gradle\caches\8.13\transforms\c6f226cf1f5f3a65de9df60a200884b0\transformed\appcompat-1.6.1\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.fragment:fragment-ktx:1.8.5] C:\Users\miche\.gradle\caches\8.13\transforms\e1ef4884c841d0ef91a03abe73ce5fd3\transformed\fragment-ktx-1.8.5\AndroidManifest.xml:2:1-7:12
-MERGED from [com.github.bumptech.glide:glide:4.16.0] C:\Users\miche\.gradle\caches\8.13\transforms\2d2c0ac361ad2d5f2718d75bd4e223d7\transformed\glide-4.16.0\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.recyclerview:recyclerview:1.3.2] C:\Users\miche\.gradle\caches\8.13\transforms\8ada0cc30ef24b16eee35ae458d2afe1\transformed\recyclerview-1.3.2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.viewpager2:viewpager2:1.1.0-beta02] C:\Users\miche\.gradle\caches\8.13\transforms\b4ec7b4f13a5b23eaf47b94debd954ae\transformed\viewpager2-1.1.0-beta02\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.firebase:firebase-auth-ktx:23.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\d40bd6ac60566bba0b40a1cc157ebc2c\transformed\firebase-auth-ktx-23.0.0\AndroidManifest.xml:2:1-17:12
@@ -50,10 +50,10 @@ MERGED from [androidx.transition:transition:1.5.0] C:\Users\miche\.gradle\caches
 MERGED from [androidx.dynamicanimation:dynamicanimation:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\9948f520e479b70ff44a432cb6739baf\transformed\dynamicanimation-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b5ce193596f85adda9604a3710d97495\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\f6ba6048dd55211f8e4900ef79d0de2f\transformed\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\40d84a7b4b8ed97ba55bc5f17e8d49ea\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.customview:customview:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b386e7161369cca3d389b56605cb88eb\transformed\customview-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\a617271c4ead4be709d625202d10c38f\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\bdab996eb3c312b9b9f4722ac67e4b76\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\40d84a7b4b8ed97ba55bc5f17e8d49ea\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b386e7161369cca3d389b56605cb88eb\transformed\customview-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.browser:browser:1.4.0] C:\Users\miche\.gradle\caches\8.13\transforms\e76ff4be2a77908b0124f595fbf731c5\transformed\browser-1.4.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.window:window:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\42d92af241b7c1fc74033d357044cfe0\transformed\window-1.0.0\AndroidManifest.xml:17:1-33:12
 MERGED from [androidx.autofill:autofill:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\64ccf74d6568970444cbde29a397c7c5\transformed\autofill-1.0.0\AndroidManifest.xml:17:1-24:12
@@ -128,18 +128,18 @@ MERGED from [com.google.android.libraries.identity.googleid:googleid:1.1.0] C:\U
 MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\miche\.gradle\caches\8.13\transforms\5011673c6cd0d6bcf565eae4aa74cef5\transformed\grpc-android-1.62.2\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.firebase:protolite-well-known-types:18.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\f364603cf3ef280a307a6b80c326d568\transformed\protolite-well-known-types-18.0.0\AndroidManifest.xml:2:1-11:12
 	package
-		INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+		INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+		INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
 	xmlns:tools
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:3:5-51
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:3:5-51
 	android:versionCode
-		INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+		INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:11-69
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:5:5-25:19
-INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:5:5-25:19
+ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:5:5-25:19
+INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:5:5-25:19
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\miche\.gradle\caches\8.13\transforms\4924fbd19c23cedaec2e76806b50fab5\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\miche\.gradle\caches\8.13\transforms\4924fbd19c23cedaec2e76806b50fab5\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\miche\.gradle\caches\8.13\transforms\131ff0ecd2d1c592e6c34ff5acfde0e8\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
@@ -193,49 +193,49 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\miche\.gradle\cach
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\miche\.gradle\caches\8.13\transforms\6271010d293e5b3c4a4eb91208a1d5d6\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\miche\.gradle\caches\8.13\transforms\6271010d293e5b3c4a4eb91208a1d5d6\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 	android:extractNativeLibs
-		INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+		INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.17.0] C:\Users\miche\.gradle\caches\8.13\transforms\a729d0b8908cf6daa89192c37f5c50c4\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:12:9-35
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:12:9-35
 	android:label
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:10:9-41
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:10:9-41
 	android:fullBackupContent
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:8:9-54
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:8:9-54
 	android:roundIcon
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:11:9-54
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:11:9-54
 	android:icon
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:9:9-43
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:9:9-43
 	android:allowBackup
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:6:9-35
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:6:9-35
 	android:theme
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:13:9-54
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:13:9-54
 	android:dataExtractionRules
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:7:9-65
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:7:9-65
 activity#com.example.grocerycompanion.MainActivity
-ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:14:9-24:20
+ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:14:9-24:20
 	android:label
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:17:13-45
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:17:13-45
 	android:exported
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:16:13-36
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:16:13-36
 	android:theme
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:18:13-58
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:18:13-58
 	android:name
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:15:13-41
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:15:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:19:13-23:29
+ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:19:13-23:29
 action#android.intent.action.MAIN
-ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:17-69
+ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:17-69
 	android:name
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:25-66
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:20:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:17-77
+ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:17-77
 	android:name
-		ADDED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:27-74
+		ADDED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml:22:27-74
 uses-sdk
-INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
-INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
 MERGED from [androidx.databinding:viewbinding:8.13.0] C:\Users\miche\.gradle\caches\8.13\transforms\029ad22a23d40e38eec2b3a81b8e6142\transformed\viewbinding-8.13.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.databinding:viewbinding:8.13.0] C:\Users\miche\.gradle\caches\8.13\transforms\029ad22a23d40e38eec2b3a81b8e6142\transformed\viewbinding-8.13.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.navigation:navigation-common:2.8.3] C:\Users\miche\.gradle\caches\8.13\transforms\b03b8f607873955d753fc944dcd23d29\transformed\navigation-common-2.8.3\AndroidManifest.xml:20:5-44
@@ -256,6 +256,10 @@ MERGED from [androidx.navigation:navigation-ui:2.8.3] C:\Users\miche\.gradle\cac
 MERGED from [androidx.navigation:navigation-ui:2.8.3] C:\Users\miche\.gradle\caches\8.13\transforms\2bf640a5d0a84a4daba5b79d18d64531\transformed\navigation-ui-2.8.3\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\miche\.gradle\caches\8.13\transforms\4924fbd19c23cedaec2e76806b50fab5\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\miche\.gradle\caches\8.13\transforms\4924fbd19c23cedaec2e76806b50fab5\transformed\material-1.12.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment-ktx:1.8.5] C:\Users\miche\.gradle\caches\8.13\transforms\e1ef4884c841d0ef91a03abe73ce5fd3\transformed\fragment-ktx-1.8.5\AndroidManifest.xml:5:5-44
+MERGED from [androidx.fragment:fragment-ktx:1.8.5] C:\Users\miche\.gradle\caches\8.13\transforms\e1ef4884c841d0ef91a03abe73ce5fd3\transformed\fragment-ktx-1.8.5\AndroidManifest.xml:5:5-44
+MERGED from [com.github.bumptech.glide:glide:4.16.0] C:\Users\miche\.gradle\caches\8.13\transforms\2d2c0ac361ad2d5f2718d75bd4e223d7\transformed\glide-4.16.0\AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.bumptech.glide:glide:4.16.0] C:\Users\miche\.gradle\caches\8.13\transforms\2d2c0ac361ad2d5f2718d75bd4e223d7\transformed\glide-4.16.0\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\miche\.gradle\caches\8.13\transforms\131ff0ecd2d1c592e6c34ff5acfde0e8\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\miche\.gradle\caches\8.13\transforms\131ff0ecd2d1c592e6c34ff5acfde0e8\transformed\constraintlayout-2.0.1\AndroidManifest.xml:5:5-7:41
 MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\miche\.gradle\caches\8.13\transforms\693db443149acb59b170a4f21819600a\transformed\coil-compose-2.6.0\AndroidManifest.xml:5:5-44
@@ -270,10 +274,6 @@ MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\miche\.gradl
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\miche\.gradle\caches\8.13\transforms\ccf32c9af056b98c64d387303ecf5891\transformed\appcompat-resources-1.6.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\miche\.gradle\caches\8.13\transforms\c6f226cf1f5f3a65de9df60a200884b0\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.appcompat:appcompat:1.6.1] C:\Users\miche\.gradle\caches\8.13\transforms\c6f226cf1f5f3a65de9df60a200884b0\transformed\appcompat-1.6.1\AndroidManifest.xml:20:5-44
-MERGED from [androidx.fragment:fragment-ktx:1.8.5] C:\Users\miche\.gradle\caches\8.13\transforms\e1ef4884c841d0ef91a03abe73ce5fd3\transformed\fragment-ktx-1.8.5\AndroidManifest.xml:5:5-44
-MERGED from [androidx.fragment:fragment-ktx:1.8.5] C:\Users\miche\.gradle\caches\8.13\transforms\e1ef4884c841d0ef91a03abe73ce5fd3\transformed\fragment-ktx-1.8.5\AndroidManifest.xml:5:5-44
-MERGED from [com.github.bumptech.glide:glide:4.16.0] C:\Users\miche\.gradle\caches\8.13\transforms\2d2c0ac361ad2d5f2718d75bd4e223d7\transformed\glide-4.16.0\AndroidManifest.xml:5:5-7:41
-MERGED from [com.github.bumptech.glide:glide:4.16.0] C:\Users\miche\.gradle\caches\8.13\transforms\2d2c0ac361ad2d5f2718d75bd4e223d7\transformed\glide-4.16.0\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.recyclerview:recyclerview:1.3.2] C:\Users\miche\.gradle\caches\8.13\transforms\8ada0cc30ef24b16eee35ae458d2afe1\transformed\recyclerview-1.3.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.recyclerview:recyclerview:1.3.2] C:\Users\miche\.gradle\caches\8.13\transforms\8ada0cc30ef24b16eee35ae458d2afe1\transformed\recyclerview-1.3.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager2:viewpager2:1.1.0-beta02] C:\Users\miche\.gradle\caches\8.13\transforms\b4ec7b4f13a5b23eaf47b94debd954ae\transformed\viewpager2-1.1.0-beta02\AndroidManifest.xml:5:5-44
@@ -328,14 +328,14 @@ MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\mic
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b5ce193596f85adda9604a3710d97495\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\f6ba6048dd55211f8e4900ef79d0de2f\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\f6ba6048dd55211f8e4900ef79d0de2f\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\40d84a7b4b8ed97ba55bc5f17e8d49ea\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\40d84a7b4b8ed97ba55bc5f17e8d49ea\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b386e7161369cca3d389b56605cb88eb\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.customview:customview:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b386e7161369cca3d389b56605cb88eb\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\a617271c4ead4be709d625202d10c38f\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\a617271c4ead4be709d625202d10c38f\transformed\legacy-support-core-utils-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\bdab996eb3c312b9b9f4722ac67e4b76\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\bdab996eb3c312b9b9f4722ac67e4b76\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\40d84a7b4b8ed97ba55bc5f17e8d49ea\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\40d84a7b4b8ed97ba55bc5f17e8d49ea\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b386e7161369cca3d389b56605cb88eb\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.1.0] C:\Users\miche\.gradle\caches\8.13\transforms\b386e7161369cca3d389b56605cb88eb\transformed\customview-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.browser:browser:1.4.0] C:\Users\miche\.gradle\caches\8.13\transforms\e76ff4be2a77908b0124f595fbf731c5\transformed\browser-1.4.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.browser:browser:1.4.0] C:\Users\miche\.gradle\caches\8.13\transforms\e76ff4be2a77908b0124f595fbf731c5\transformed\browser-1.4.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.window:window:1.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\42d92af241b7c1fc74033d357044cfe0\transformed\window-1.0.0\AndroidManifest.xml:20:5-22:41
@@ -485,9 +485,9 @@ MERGED from [com.google.firebase:protolite-well-known-types:18.0.0] C:\Users\mic
 	tools:overrideLibrary
 		ADDED from [com.google.firebase:firebase-auth:23.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\4b6abcca0048f4c1ac11284768e67b2c\transformed\firebase-auth-23.0.0\AndroidManifest.xml:23:9-148
 	android:targetSdkVersion
-		INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+		INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\cmpt362-grocery-companion\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
+		INJECTED from C:\cmpt362-grocery-companion\GroceryCompanion\app\src\main\AndroidManifest.xml
 service#com.google.firebase.components.ComponentDiscoveryService
 ADDED from [com.google.firebase:firebase-auth-ktx:23.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\d40bd6ac60566bba0b40a1cc157ebc2c\transformed\firebase-auth-ktx-23.0.0\AndroidManifest.xml:8:9-14:19
 MERGED from [com.google.firebase:firebase-auth:23.0.0] C:\Users\miche\.gradle\caches\8.13\transforms\4b6abcca0048f4c1ac11284768e67b2c\transformed\firebase-auth-23.0.0\AndroidManifest.xml:66:9-72:19
