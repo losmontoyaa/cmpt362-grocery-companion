@@ -2,7 +2,6 @@ package com.example.grocerycompanion.ui.item
 
 import com.example.grocerycompanion.ui.common.PopCard
 import androidx.compose.animation.AnimatedVisibility
-import com.example.grocerycompanion.repo.FirebaseItemRepo
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -14,6 +13,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.grocerycompanion.model.Item
+import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.util.ViewModelFactory
 
 @Composable
@@ -44,8 +47,9 @@ fun ItemListScreen(
         }
     )
 
-
     val items by vm.items.collectAsState()
+    val isLoading by vm.isLoading.collectAsState()
+    val errorMessage by vm.errorMessage.collectAsState()
 
     var query by remember { mutableStateOf("") }
     var showAddDialog by remember { mutableStateOf(false) }
@@ -85,50 +89,107 @@ fun ItemListScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Animated empty state
-            AnimatedVisibility(
-                visible = filtered.isEmpty() && query.isNotBlank(),
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it / 4 }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 4 })
-            ) {
+            // 🔁 Loading state
+            if (isLoading) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator()
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Oops, we couldn't find that item.",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Would you like to add it?",
+                            text = "Loading items…",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Button(onClick = { showAddDialog = true }) {
-                            Text("Add item")
+                    }
+                }
+            }
+            // ❌ Error state
+            else if (errorMessage != null) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer
+                        ),
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Couldn't load items",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = errorMessage ?: "",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            TextButton(onClick = { vm.retry() }) {
+                                Text("Try again")
+                            }
                         }
                     }
                 }
             }
-
-            // Animated list state
-            AnimatedVisibility(
-                visible = filtered.isNotEmpty() || query.isBlank(),
-                enter = fadeIn() + slideInVertically(initialOffsetY = { it / 8 }),
-                exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 8 })
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+            // ✅ Normal states: empty or list
+            else {
+                // Animated empty state
+                AnimatedVisibility(
+                    visible = filtered.isEmpty() && query.isNotBlank(),
+                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 4 }),
+                    exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 4 })
                 ) {
-                    items(filtered, key = { it.id }) { item ->
-                        ItemRow(
-                            item = item,
-                            onClick = { onItemClick(item.id) }
-                        )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "Oops, we couldn't find that item.",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Would you like to add it?",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Button(onClick = { showAddDialog = true }) {
+                                Text("Add item")
+                            }
+                        }
+                    }
+                }
+
+                // Animated list state
+                AnimatedVisibility(
+                    visible = filtered.isNotEmpty() || query.isBlank(),
+                    enter = fadeIn() + slideInVertically(initialOffsetY = { it / 8 }),
+                    exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 8 })
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(filtered, key = { it.id }) { item ->
+                            ItemRow(
+                                item = item,
+                                onClick = { onItemClick(item.id) }
+                            )
+                        }
                     }
                 }
             }
