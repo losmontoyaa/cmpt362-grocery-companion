@@ -5,6 +5,9 @@ plugins {
 
     // Firebase Gradle plugin
     id("com.google.gms.google-services")
+
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
 }
 
 android {
@@ -19,6 +22,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val mapsApiKey: String = project.findProperty("MAPS_API_KEY") as? String ?: ""
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
     }
 
     buildTypes {
@@ -40,6 +46,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -86,6 +93,7 @@ dependencies {
 
 
     implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.androidx.navigation.compose)
 
     // --- Tests ---
     testImplementation(libs.junit)
@@ -119,6 +127,14 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Google Maps Compose
+    implementation("com.google.maps.android:maps-compose:6.12.2")
 
 
 }
