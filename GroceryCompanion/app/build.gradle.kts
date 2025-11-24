@@ -100,6 +100,9 @@ dependencies {
     implementation("com.google.mlkit:text-recognition:16.0.0")
 
     //OpenAI Integration https://github.com/aallam/openai-kotlin
-    implementation("com.aallam.openai:openai-client:4.0.1")
+    implementation(platform("com.aallam.openai:openai-client-bom:4.0.1"))
+
+    implementation("com.aallam.openai:openai-client")
+    runtimeOnly("io.ktor:ktor-client-okhttp")
 
 }

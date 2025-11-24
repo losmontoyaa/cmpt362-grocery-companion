@@ -41,6 +41,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.example.grocerycompanion.BuildConfig
+import com.example.grocerycompanion.ui.screens.ReceiptDisplay
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -75,6 +76,8 @@ private fun AppRoot() {
 
         var showReceiptCamera by remember { mutableStateOf(false) }
         var receiptPhotoUri by remember { mutableStateOf<Uri?>(null) }
+        var parsedReceipt by remember { mutableStateOf<String?>(null) }
+        var showReceiptInfo by remember { mutableStateOf(false) }
 
         var showGokuFlow by remember { mutableStateOf(false) }
 
@@ -108,7 +111,11 @@ private fun AppRoot() {
                 success ->
                 if (success && receiptPhotoUri != null){
                     //Receipt photo taken! Now analyze it.
-                    extractReceipt(ctx, receiptPhotoUri!!)
+                    extractReceipt(ctx, receiptPhotoUri!!){
+                        receiptText ->
+                        parsedReceipt = receiptText
+                        showReceiptInfo = true
+                    }
                     showReceiptCamera = false
                 }
                 else
@@ -122,6 +129,7 @@ private fun AppRoot() {
                     XmlGokuHostScreen(onExit = { showGokuFlow = false })
                 }
 
+                //Barcode search: right now, looks up barcode number on google. -- Carlos
                 showBarcodeCamera && hasPermission -> {
                     CameraScreen(
                         Modifier.fillMaxSize(),
@@ -146,6 +154,17 @@ private fun AppRoot() {
                         receiptCameraLauncher.launch(photoUri)
                     }
 
+                }
+
+                //Displays the receipt information. In the final version it will do more but for now, just shows what was found. -- Carlos
+                showReceiptInfo ->{
+                    ReceiptDisplay(
+                        receiptText = parsedReceipt ?: "No receipt text",
+                        onClose = {
+                            parsedReceipt = null
+                            showReceiptInfo = false
+                        }
+                    )
                 }
 
                 else -> {
@@ -203,20 +222,69 @@ private fun AppRoot() {
 
 }
 
-private fun extractReceipt(context: Context, uri: Uri){
+//Uses MLKit OCR to extract text from the receipt. -- Carlos
+private fun extractReceipt(context: Context, uri: Uri, onResult : (String) -> Unit){
     val image = InputImage.fromFilePath(context, uri)
     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
     recognizer.process(image).addOnSuccessListener { visionText ->
         val resultText = visionText.text
         println("DEBUG: Receipt text: $resultText")
+
+        analyzeReceiptText(resultText){parsedText ->
+            onResult(parsedText)
+        }
     }
     .addOnFailureListener { e ->
         e.printStackTrace()
+        onResult("Error: ${e.message}")
     }
 
 }
 
+//Using OpenAI, the content of the receipt is interpreted and put into a usable format. -- Carlos
+private fun analyzeReceiptText(extractedText: String, onResult: (String) -> Unit){
+    val client = OpenAI("")
 
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val request = ChatCompletionRequest(
+                model = ModelId("gpt-4o-mini"),
+                messages = listOf(
+                    ChatMessage(
+                        role = ChatRole.System,
+                        content = """
+                            You are an AI designed only to parse information from text extracted from shopping receipts. 
+                            Your task is to discern and extract the following information from the provided text string and
+                            return in strictly this format:
 
+                            {
+                                "store_name": "",
+                                "address": "",
+                                "items": [
+                                    {"name": "", "price": ""}
+                                ]
+                            }
 
+                            Do NOT include comments or explanations.
+                        """.trimIndent()
+                    ),
+                    ChatMessage(
+                        role = ChatRole.User,
+                        content = extractedText
+                    )
+                )
+            )
+            val completion = client.chatCompletion(request)
+            val output = completion.choices.first().message?.content ?: "NO RESULT"
+            println("GPT RECEIPT ANALYSIS: $output")
 
+            onResult(output)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onResult("ERROR: ${e.message}")
+        }
+    }
+
+}

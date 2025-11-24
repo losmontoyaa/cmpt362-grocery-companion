@@ -13,12 +13,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
-
-
-
+// Creates a camera view to scan barcodes
 @SuppressLint("UnsafeOptInUsageError")
 @Composable
 fun CameraScreen(
