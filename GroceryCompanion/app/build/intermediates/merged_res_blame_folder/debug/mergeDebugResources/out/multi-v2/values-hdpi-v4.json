@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-73:/values-hdpi-v4/values-hdpi-v4.xml",
+            "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-84:/values-hdpi-v4/values-hdpi-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Jason\\.gradle\\caches\\8.13\\transforms\\c57c8cee7f9f34d4b230c703845fd52f\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
+                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\834929ff9516f01e1e134c3264d3b3d8\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

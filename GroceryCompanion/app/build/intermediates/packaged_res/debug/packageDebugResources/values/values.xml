@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="brand_accent">#FACC15</color>
-    <color name="brand_primary">#16A34A</color>
+    <color name="black">#FF000000</color>
+    <color name="brand_accent">#FAEC15</color>
+    <color name="brand_primary">#10436A</color>
     <color name="brand_secondary">#7C3AED</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
     <color name="surface_bg">#FAFAFA</color>
     <color name="surface_card">#FFFFFF</color>
     <color name="surface_variant">#E7E7E7</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="text_primary">#111827</color>
-    <color name="text_secondary">#6B7280</color>
-    <color name="white">#FFFFFF</color>
+    <color name="text_secondary">#687280</color>
+    <color name="white">#FFFFFFFF</color>
     <string name="app_name">GroceryCompanion</string>
     <string name="gcm_defaultSenderId" translatable="false">1092938723273</string>
     <string name="google_api_key" translatable="false">AIzaSyAdPUK70GC7Y2hwoXv0PP_r5bUNSQ8Qyeo</string>
@@ -16,8 +22,11 @@
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAdPUK70GC7Y2hwoXv0PP_r5bUNSQ8Qyeo</string>
     <string name="google_storage_bucket" translatable="false">grocery-companion-9920c.firebasestorage.app</string>
     <string name="project_id" translatable="false">grocery-companion-9920c</string>
+    <string name="title_activity_map_test_activity.kt">MapTestActivity.kt</string>
     <string name="title_activity_rating_test">RatingTestActivity</string>
     <style name="Theme.GroceryCompanion" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        
         
         <item name="android:statusBarColor">@color/brand_primary</item>
         <item name="android:navigationBarColor">@color/surface_card</item>

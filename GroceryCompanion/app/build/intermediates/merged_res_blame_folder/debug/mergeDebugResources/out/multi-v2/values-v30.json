@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-73:/values-v30/values-v30.xml",
+            "outputFile": "com.example.grocerycompanion.app-mergeDebugResources-84:/values-v30/values-v30.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Jason\\.gradle\\caches\\8.13\\transforms\\33b3d0d7cab4824df74b53a72c5dd342\\transformed\\material3-release\\res\\values-v30\\values-v30.xml",
+                    "source": "C:\\Users\\navde\\.gradle\\caches\\8.13\\transforms\\c6a365586edaa95fcdf6b232448bf5b8\\transformed\\material3\\res\\values-v30\\values-v30.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

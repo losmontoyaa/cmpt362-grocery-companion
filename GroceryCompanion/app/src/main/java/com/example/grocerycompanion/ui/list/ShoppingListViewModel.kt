@@ -3,7 +3,6 @@ package com.example.grocerycompanion.ui.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.grocerycompanion.repo.FirebasePriceRepo
-
 import com.example.grocerycompanion.repo.FirebaseShoppingListRepo
 import com.example.grocerycompanion.model.ShoppingListItem
 import com.example.grocerycompanion.repo.FirebaseStoreRepo

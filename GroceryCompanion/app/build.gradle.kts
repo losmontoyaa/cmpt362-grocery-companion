@@ -10,6 +10,11 @@ plugins {
 
 }
 
+repositories {
+    google()
+    mavenCentral()
+}
+
 android {
     namespace = "com.example.grocerycompanion"
     compileSdk = 36
@@ -80,10 +85,10 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
-    // --- Firebase (Auth + Firestore) ---
-    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    // --- Firebase via BoM ---
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-analytics")
 
 
@@ -96,6 +101,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     // --- Tests ---
+    implementation(libs.androidx.compose.ui.viewbinding)
+    implementation(libs.play.services.mlkit.text.recognition)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -135,6 +142,15 @@ dependencies {
 
     // Google Maps Compose
     implementation("com.google.maps.android:maps-compose:6.12.2")
+
+    // CameraX
+    implementation("androidx.camera:camera-core:1.3.3")
+    implementation("androidx.camera:camera-camera2:1.3.3")
+    implementation("androidx.camera:camera-lifecycle:1.3.3")
+    implementation("androidx.camera:camera-view:1.3.3")
+
+    // ML Kit Barcode Scanner
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
 
 }

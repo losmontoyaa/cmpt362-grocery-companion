@@ -48,6 +48,7 @@ fun StartUpScreen(
     modifier: Modifier = Modifier,
     onSearch: (SearchInput) -> Unit,
     onScanBarcodeClick: () -> Unit,
+    onScanReceiptClick: () -> Unit,
     onOpenItemList: () -> Unit = {},
     onOpenProfile: () -> Unit = {}
 ) {
@@ -147,6 +148,19 @@ fun StartUpScreen(
                 Spacer(Modifier.width(8.dp))
                 Text("Scan Barcode Lookup")
             }
+
+            Spacer(Modifier.height(16.dp))
+
+
+            Button(
+                onClick = onScanReceiptClick,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+                Icon(Icons.Filled.CameraAlt, null)
+                Spacer(Modifier.width(8.dp))
+                Text("Scan Receipt Lookup")
+            }
         }
 
 
@@ -157,7 +171,7 @@ fun StartUpScreen(
                 .imePadding(),   // when keyboard up
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(4.dp))
             Image(
                 painter = painterResource(id = R.drawable.grocery_basket),
                 contentDescription = null,

@@ -1,19 +1,19 @@
-#Sat Nov 22 20:16:01 PST 2025
-base.0=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
-base.1=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
-base.10=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
-base.11=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
-base.12=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes3.dex
-base.13=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes4.dex
-base.14=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes5.dex
-base.2=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\10\\classes.dex
-base.3=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\11\\classes.dex
-base.4=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\12\\classes.dex
-base.5=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
-base.6=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\2\\classes.dex
-base.7=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\3\\classes.dex
-base.8=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
-base.9=C\:\\Users\\Jason\\CMPT-362\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\8\\classes.dex
+#Mon Nov 24 02:45:35 PST 2025
+base.0=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.1=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.10=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
+base.11=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
+base.12=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes3.dex
+base.13=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes4.dex
+base.14=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes5.dex
+base.2=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\10\\classes.dex
+base.3=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\11\\classes.dex
+base.4=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\12\\classes.dex
+base.5=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
+base.6=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\2\\classes.dex
+base.7=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\3\\classes.dex
+base.8=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
+base.9=D\:\\Android\\Projects\\cmpt362-grocery-companion\\GroceryCompanion\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\8\\classes.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.10=9/classes.dex
