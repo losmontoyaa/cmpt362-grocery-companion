@@ -152,5 +152,10 @@ dependencies {
     // ML Kit Barcode Scanner
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
+    // OpenAI Kotlin SDK
+    implementation("com.aallam.openai:openai-client:3.7.0")
+    implementation("io.ktor:ktor-client-okhttp:2.3.6")
+    implementation(platform("io.ktor:ktor-bom:2.3.6"))
+
 
 }

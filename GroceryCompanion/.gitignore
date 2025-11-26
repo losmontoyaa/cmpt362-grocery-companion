@@ -1,46 +1,51 @@
-# ============================
-# Google Services (VERY IMPORTANT — DO NOT COMMIT)
-# ============================
+# ====================================
+# Google Services (DO NOT COMMIT)
+# ====================================
 app/google-services.json
 
-# ============================
-# Build folders
-# ============================
-**/build/
-**/out/
-
-# ============================
-# Gradle
-# ============================
-.gradle/
+# ====================================
+# Local secrets (DO NOT COMMIT)
+# ====================================
 local.properties
 
-# ============================
-# Android specific
-# ============================
-*.iml
-.DS_Store
+# ====================================
+# Build output (Gradle / Android)
+# ====================================
+/build/
+*/build/
+**/build/
+**/out/
+.cxx/
+.externalNativeBuild/
 
-# ============================
-# Android / Gradle (expanded)
-# ============================
-/local.properties
-/.gradle/
-/**/build/
-/captures/
-/.externalNativeBuild/
+# ====================================
+# Gradle configuration
+# ====================================
+.gradle/
+gradle-app.setting
 
-# ============================
-# IntelliJ / Android Studio
-# ============================
+# ====================================
+# IDE / Android Studio / IntelliJ
+# ====================================
 .idea/
-/*.iml
-*.log
+*.iml
+*.iws
+*.ipr
 workspace.xml
 shelf/
 
-# ============================
-# OS junk files
-# ============================
+# ====================================
+# Logs and caches
+# ====================================
+*.log
+
+# ====================================
+# Android Captures
+# ====================================
+captures/
+
+# ====================================
+# OS-generated junk
+# ====================================
 .DS_Store
 Thumbs.db
