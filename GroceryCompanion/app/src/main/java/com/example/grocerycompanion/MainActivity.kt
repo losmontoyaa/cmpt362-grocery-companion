@@ -64,6 +64,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+import com.example.grocerycompanion.ui.start.AppStartPage
+
 
 private enum class AuthScreen { Login, SignUp, Forgot }
 private enum class BottomTab { ITEMS, LIST }
@@ -215,71 +217,90 @@ private fun AppRoot() {
             }
 
         } else {
-            // ---------- AUTH FLOW ----------
-            val scale by animateFloatAsState(
-                targetValue = if (authScreen == AuthScreen.Login) 1f else 0.97f,
-                animationSpec = tween(250),
-                label = "authScale"
-            )
 
-            Crossfade(
-                targetState = authScreen,
-                animationSpec = tween(350),
-                label = "authXfade"
-            ) { screen ->
-                Box(
-                    Modifier
-                        .graphicsLayer(scaleX = scale, scaleY = scale)
-                        .fillMaxSize()
-                ) {
-                    when (screen) {
-                        AuthScreen.Login -> LoginScreen(
-                            onLogin = { email, password ->
-                                auth.signInWithEmailAndPassword(email, password)
-                                    .addOnSuccessListener { isLoggedIn = true }
-                                    .addOnFailureListener {
-                                        Toast.makeText(
-                                            ctx,
-                                            "Invalid credentials. Try again.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                            },
-                            onGoToSignUp = { authScreen = AuthScreen.SignUp },
-                            onForgotPassword = { authScreen = AuthScreen.Forgot }
-                        )
+            var showStart by remember { mutableStateOf(true) }
 
-                        AuthScreen.SignUp -> SignUpPage(
-                            onReturnToLogin = { authScreen = AuthScreen.Login },
-                            onSignUpComplete = { _, email, password ->
-                                auth.createUserWithEmailAndPassword(email, password)
-                                    .addOnSuccessListener {
-                                        Toast.makeText(
-                                            ctx,
-                                            "Account created. Please log in.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        authScreen = AuthScreen.Login
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(
-                                            ctx,
-                                            it.localizedMessage ?: "Sign up failed",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                            }
-                        )
+            if (showStart) {
+                AppStartPage(
+                    onLoginClick = {
+                        showStart = false
+                        authScreen = AuthScreen.Login
+                    },
+                    onCreateAccountClick = {
+                        showStart = false
+                        authScreen = AuthScreen.SignUp
+                    }
+                )
+            } else {
 
-                        AuthScreen.Forgot -> ForgotPassword(
-                            onReturnToLogin = { authScreen = AuthScreen.Login }
-                        )
+
+                // ---------- AUTH FLOW ----------
+                val scale by animateFloatAsState(
+                    targetValue = if (authScreen == AuthScreen.Login) 1f else 0.97f,
+                    animationSpec = tween(250),
+                    label = "authScale"
+                )
+
+                Crossfade(
+                    targetState = authScreen,
+                    animationSpec = tween(350),
+                    label = "authXfade"
+                ) { screen ->
+                    Box(
+                        Modifier
+                            .graphicsLayer(scaleX = scale, scaleY = scale)
+                            .fillMaxSize()
+                    ) {
+                        when (screen) {
+                            AuthScreen.Login -> LoginScreen(
+                                onLogin = { email, password ->
+                                    auth.signInWithEmailAndPassword(email, password)
+                                        .addOnSuccessListener { isLoggedIn = true }
+                                        .addOnFailureListener {
+                                            Toast.makeText(
+                                                ctx,
+                                                "Invalid credentials. Try again.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                },
+                                onGoToSignUp = { authScreen = AuthScreen.SignUp },
+                                onForgotPassword = { authScreen = AuthScreen.Forgot }
+                            )
+
+                            AuthScreen.SignUp -> SignUpPage(
+                                onReturnToLogin = { authScreen = AuthScreen.Login },
+                                onSignUpComplete = { _, email, password ->
+                                    auth.createUserWithEmailAndPassword(email, password)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(
+                                                ctx,
+                                                "Account created. Please log in.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            authScreen = AuthScreen.Login
+                                        }
+                                        .addOnFailureListener {
+                                            Toast.makeText(
+                                                ctx,
+                                                it.localizedMessage ?: "Sign up failed",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                }
+                            )
+
+                            AuthScreen.Forgot -> ForgotPassword(
+                                onReturnToLogin = { authScreen = AuthScreen.Login }
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 /* ---------- GOKU LIST UI ---------- */
 @OptIn(ExperimentalMaterial3Api::class)
