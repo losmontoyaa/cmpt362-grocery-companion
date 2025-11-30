@@ -17,9 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -32,8 +35,16 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +52,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.OpenAI
 import com.example.grocerycompanion.ui.item.ItemDetailScreen
 import com.example.grocerycompanion.ui.item.ItemListScreen
 import com.example.grocerycompanion.ui.list.ShoppingListScreen
@@ -50,20 +66,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import java.io.File
-import androidx.compose.runtime.saveable.rememberSaveable
-
-import com.aallam.openai.api.chat.ChatCompletionRequest
-import com.aallam.openai.api.chat.ChatMessage
-import com.aallam.openai.api.chat.ChatRole
-import com.aallam.openai.api.model.ModelId
-import com.aallam.openai.client.OpenAI
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+import java.io.File
 
 private enum class AuthScreen { Login, SignUp, Forgot }
 private enum class BottomTab { ITEMS, LIST }
@@ -138,7 +145,12 @@ private fun AppRoot() {
 
             when {
                 showGokuFlow -> {
-                    GroceryApp()
+                    GroceryApp(
+                        onBackToHome = {
+                            // back to StartUpScreen
+                            showGokuFlow = false
+                        }
+                    )
                 }
 
                 // -------- BARCODE CAMERA --------
@@ -282,11 +294,36 @@ private fun AppRoot() {
 }
 
 /* ---------- GOKU LIST UI ---------- */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun GroceryApp() {
+fun GroceryApp(
+    onBackToHome: () -> Unit
+) {
     var selectedTab by rememberSaveable { mutableStateOf(BottomTab.ITEMS) }
     var detailItemId by rememberSaveable { mutableStateOf<String?>(null) }
+
+    val pagerState = rememberPagerState(
+        initialPage = if (selectedTab == BottomTab.ITEMS) 0 else 1,
+        pageCount = { 2 }
+    )
+    val scope = rememberCoroutineScope()
+
+    // Keep pager in sync when bottom tab changes
+    LaunchedEffect(selectedTab) {
+        val target = if (selectedTab == BottomTab.ITEMS) 0 else 1
+        if (pagerState.currentPage != target) {
+            pagerState.scrollToPage(target)
+        }
+    }
+
+    // Keep bottom tab in sync when user swipes pager
+    LaunchedEffect(pagerState.currentPage) {
+        val newTab = if (pagerState.currentPage == 0) BottomTab.ITEMS else BottomTab.LIST
+        if (selectedTab != newTab) {
+            selectedTab = newTab
+            detailItemId = null
+        }
+    }
 
     val title = when {
         detailItemId != null -> "Item details"
@@ -299,6 +336,14 @@ fun GroceryApp() {
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(title) },
+                navigationIcon = {
+                    // Only show Home button when not inside detail screen
+                    if (detailItemId == null) {
+                        TextButton(onClick = onBackToHome) {
+                            Text("Home")
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     titleContentColor = MaterialTheme.colorScheme.onSurface
@@ -315,6 +360,7 @@ fun GroceryApp() {
                     onClick = {
                         selectedTab = BottomTab.ITEMS
                         detailItemId = null
+                        scope.launch { pagerState.animateScrollToPage(0) }
                     },
                     icon = { Icon(Icons.Filled.List, contentDescription = "Items") },
                     label = { Text("Items") }
@@ -324,6 +370,7 @@ fun GroceryApp() {
                     onClick = {
                         selectedTab = BottomTab.LIST
                         detailItemId = null
+                        scope.launch { pagerState.animateScrollToPage(1) }
                     },
                     icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "List") },
                     label = { Text("List") }
@@ -332,7 +379,9 @@ fun GroceryApp() {
         }
     ) { padding ->
         Surface(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
             color = MaterialTheme.colorScheme.background
         ) {
             if (detailItemId != null) {
@@ -341,9 +390,11 @@ fun GroceryApp() {
                     onBack = { detailItemId = null }
                 )
             } else {
-                when (selectedTab) {
-                    BottomTab.ITEMS -> ItemListScreen(onItemClick = { id -> detailItemId = id })
-                    BottomTab.LIST -> ShoppingListScreen()
+                HorizontalPager(state = pagerState) { page ->
+                    when (page) {
+                        0 -> ItemListScreen(onItemClick = { id -> detailItemId = id })
+                        1 -> ShoppingListScreen()
+                    }
                 }
             }
         }
@@ -352,7 +403,7 @@ fun GroceryApp() {
 
 /* ---------- RECEIPT OCR + AI PARSING ---------- */
 // Uses ML Kit OCR to extract raw text from the receipt, then sends it to OpenAI
-// to be interpreted into a structured format. -- Carlos
+// to be interpreted into a structured format.
 private fun extractReceipt(context: Context, uri: Uri, onResult: (String) -> Unit) {
     val image = InputImage.fromFilePath(context, uri)
     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -373,12 +424,9 @@ private fun extractReceipt(context: Context, uri: Uri, onResult: (String) -> Uni
         }
 }
 
-// Using OpenAI, the content of the receipt is interpreted and put into a usable format. -- Carlos
+// Using OpenAI, the content of the receipt is interpreted and put into a usable format.
 private fun analyzeReceiptText(extractedText: String, onResult: (String) -> Unit) {
     // ⚠️ IMPORTANT: Do NOT commit your real API key.
-    // Recommended: expose it via BuildConfig and local.properties:
-    // val client = OpenAI(BuildConfig.OPENAI_API_KEY)
-
     val client = OpenAI("[INSERT OPENAI API KEY HERE")  // or temporarily: OpenAI("CARLOS_KEY_HERE")
 
     CoroutineScope(Dispatchers.IO).launch {
@@ -427,5 +475,3 @@ private fun analyzeReceiptText(extractedText: String, onResult: (String) -> Unit
         }
     }
 }
-
-

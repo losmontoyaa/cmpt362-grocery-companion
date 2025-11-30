@@ -30,6 +30,8 @@ android {
 
         val mapsApiKey: String = project.findProperty("MAPS_API_KEY") as? String ?: ""
         buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
+
+
     }
 
     buildTypes {

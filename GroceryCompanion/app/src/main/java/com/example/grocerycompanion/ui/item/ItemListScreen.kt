@@ -1,5 +1,6 @@
 package com.example.grocerycompanion.ui.item
 
+import android.location.Geocoder
 import com.example.grocerycompanion.ui.common.PopCard
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -27,15 +28,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.grocerycompanion.model.Item
 import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.util.ViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 @Composable
 fun ItemListScreen(
@@ -43,7 +50,9 @@ fun ItemListScreen(
 ) {
     val vm: ItemListViewModel = viewModel(
         factory = ViewModelFactory {
-            ItemListViewModel(FirebaseItemRepo())
+            ItemListViewModel(
+                itemRepo = FirebaseItemRepo()
+            )
         }
     )
 
@@ -89,7 +98,6 @@ fun ItemListScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 🔁 Loading state
             if (isLoading) {
                 Box(
                     modifier = Modifier
@@ -107,7 +115,7 @@ fun ItemListScreen(
                     }
                 }
             }
-            // ❌ Error state
+
             else if (errorMessage != null) {
                 Box(
                     modifier = Modifier
@@ -143,7 +151,7 @@ fun ItemListScreen(
                     }
                 }
             }
-            // ✅ Normal states: empty or list
+
             else {
                 // Animated empty state
                 AnimatedVisibility(
@@ -200,8 +208,16 @@ fun ItemListScreen(
         AddItemDialog(
             initialName = query,
             onDismiss = { showAddDialog = false },
-            onConfirm = { name, brand, barcode, category ->
-                vm.addItem(name, brand, barcode, category)
+            onConfirm = { name, brand, barcode, category, storeName, lat, lng ->
+                vm.addItem(
+                    name = name,
+                    brand = brand,
+                    barcode = barcode,
+                    category = category,
+                    storeName = storeName,
+                    latitude = lat,
+                    longitude = lng
+                )
                 showAddDialog = false
             }
         )
@@ -253,12 +269,27 @@ private fun ItemRow(
 private fun AddItemDialog(
     initialName: String,
     onDismiss: () -> Unit,
-    onConfirm: (name: String, brand: String, barcode: String, category: String) -> Unit
+    onConfirm: (
+        name: String,
+        brand: String,
+        barcode: String,
+        category: String,
+        storeName: String,
+        latitude: Double?,
+        longitude: Double?
+    ) -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     var name by remember { mutableStateOf(initialName) }
     var brand by remember { mutableStateOf("") }
     var barcode by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
+    var storeName by remember { mutableStateOf("") }
+    var storeAddress by remember { mutableStateOf("") }
+    var isResolving by remember { mutableStateOf(false) }
+    var geoError by remember { mutableStateOf<String?>(null) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -292,22 +323,116 @@ private fun AddItemDialog(
                     label = { Text("Category") },
                     modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedTextField(
+                    value = storeName,
+                    onValueChange = { storeName = it },
+                    label = { Text("Store name (e.g. Real Canadian Superstore)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = storeAddress,
+                    onValueChange = { storeAddress = it },
+                    label = { Text("Store address (e.g. 4700 Kingsway, Burnaby, BC)") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (geoError != null) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = geoError ?: "",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         },
         confirmButton = {
             TextButton(
+                enabled = !isResolving,
                 onClick = {
-                    if (name.isNotBlank()) {
+                    if (name.isBlank()) return@TextButton
+
+                    val queryText = listOf(storeName, storeAddress)
+                        .filter { it.isNotBlank() }
+                        .joinToString(", ")
+
+                    if (queryText.isBlank()) {
+                        // No location info – add item without coordinates
                         onConfirm(
                             name.trim(),
                             brand.trim(),
                             barcode.trim(),
-                            category.trim()
+                            category.trim(),
+                            storeName.trim(),
+                            null,
+                            null
                         )
+                        return@TextButton
+                    }
+
+                    // Resolve address -> lat/lng using Geocoder (off main thread)
+                    isResolving = true
+                    geoError = null
+
+                    scope.launch(Dispatchers.IO) {
+                        try {
+                            val geocoder = Geocoder(context, Locale.getDefault())
+                            val results = geocoder.getFromLocationName(queryText, 1)
+
+                            val (lat, lng) =
+                                if (!results.isNullOrEmpty()) {
+                                    results[0].latitude to results[0].longitude
+                                } else {
+                                    null to null
+                                }
+
+                            withContext(Dispatchers.Main) {
+                                isResolving = false
+                                if (lat == null || lng == null) {
+                                    geoError = "Couldn't resolve location. Item will be saved without map location."
+                                    // You can decide: either block save, or still save without coords.
+                                    onConfirm(
+                                        name.trim(),
+                                        brand.trim(),
+                                        barcode.trim(),
+                                        category.trim(),
+                                        storeName.trim(),
+                                        null,
+                                        null
+                                    )
+                                } else {
+                                    onConfirm(
+                                        name.trim(),
+                                        brand.trim(),
+                                        barcode.trim(),
+                                        category.trim(),
+                                        storeName.trim(),
+                                        lat,
+                                        lng
+                                    )
+                                }
+                            }
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                isResolving = false
+                                geoError = "Error resolving location: ${e.localizedMessage ?: "Unknown error"}"
+                                // still save without coordinates if you want:
+                                onConfirm(
+                                    name.trim(),
+                                    brand.trim(),
+                                    barcode.trim(),
+                                    category.trim(),
+                                    storeName.trim(),
+                                    null,
+                                    null
+                                )
+                            }
+                        }
                     }
                 }
             ) {
-                Text("Save")
+                Text(if (isResolving) "Resolving…" else "Save")
             }
         },
         dismissButton = {

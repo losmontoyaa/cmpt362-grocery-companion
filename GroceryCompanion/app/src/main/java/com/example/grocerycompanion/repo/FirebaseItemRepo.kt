@@ -3,6 +3,7 @@ package com.example.grocerycompanion.repo
 import com.example.grocerycompanion.model.Item
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -11,9 +12,8 @@ import kotlinx.coroutines.tasks.await
 class FirebaseItemRepo(
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
-    // Your two collections:
-    //  - products  = pre-scraped grocery products (LD01, SS01, WM01…)
-    //  - items     = user-added custom items (Duck, etc.)
+    //  - products  = pre-scraped + user-added grocery products (LD01, SS01, WM01, item-123…)
+    //  - items     = legacy/custom items (no longer used for new adds)
     private val productsCol = db.collection("products")
     private val itemsCol = db.collection("items")
 
@@ -27,7 +27,6 @@ class FirebaseItemRepo(
         var latestCustom: List<Item> = emptyList()
 
         fun push() {
-            // products first, then user items
             trySend(latestProducts + latestCustom)
         }
 
@@ -40,7 +39,7 @@ class FirebaseItemRepo(
             push()
         }
 
-        // Listen to user-added items collection
+        // Listen to legacy items collection
         val itemsListener = itemsCol.addSnapshotListener { snap, error ->
             if (error != null) return@addSnapshotListener
             latestCustom = snap?.documents
@@ -61,13 +60,11 @@ class FirebaseItemRepo(
      * 2) fall back to items/{id}
      */
     suspend fun get(id: String): Item? {
-        // Try products first
         val prodSnap = productsCol.document(id).get().await()
         if (prodSnap.exists()) {
             prodSnap.toItemFromProducts()?.let { return it }
         }
 
-        // Then custom items
         val itemSnap = itemsCol.document(id).get().await()
         if (itemSnap.exists()) {
             itemSnap.toItemFromItems()?.let { return it }
@@ -77,44 +74,57 @@ class FirebaseItemRepo(
     }
 
     /**
-     * Add a user-created item to items/{id}.
-     * (Your "Add item" dialog uses this.)
+     * Add a user-created item to products/{id}.
+     *
+     * Also writes:
+     *  - store_id
+     *  - store_name
+     *  - location (GeoPoint) if we have coordinates
      */
-    suspend fun add(item: Item) {
-        val data = mapOf(
-            "name" to item.name,
+    suspend fun add(
+        item: Item,
+        storeName: String,
+        latitude: Double?,
+        longitude: Double?
+    ) {
+        val baseData = mutableMapOf<String, Any>(
+            "product_name" to item.name,
             "brand" to item.brand,
             "barcode" to item.barcode,
-            "imgUrl" to item.imgUrl,
             "category" to item.category,
+            "url" to item.imgUrl,
             "avgRating" to item.avgRating,
             "ratingsCount" to item.ratingsCount
         )
-        itemsCol.document(item.id).set(data).await()
+
+        // derive a simple store_id from the name (e.g. "Real Canadian Superstore" -> "real_canadian_superstore")
+        val storeId = storeName.lowercase()
+            .replace("\\s+".toRegex(), "_")
+            .replace("[^a-z0-9_]+".toRegex(), "")
+
+        baseData["store_id"] = storeId
+        baseData["store_name"] = storeName
+
+        if (latitude != null && longitude != null) {
+            baseData["location"] = GeoPoint(latitude, longitude)
+        }
+
+        productsCol.document(item.id).set(baseData).await()
     }
 }
 
 /**
  * Map a document from PRODUCTS → Item
- *
- * Firestore doc example:
- *  - product_name
- *  - brand
- *  - barcode
- *  - category / cateory (typo in some docs)
- *  - url
- *  - avgRating
- *  - ratingsCount
  */
 private fun DocumentSnapshot.toItemFromProducts(): Item? {
-    val id = id                     // LD01 / SS01 / WM01 / etc.
+    val id = id
     val name = getString("product_name") ?: return null
     val brand = getString("brand") ?: ""
     val barcode = getString("barcode") ?: ""
     val category =
-        getString("category") ?:    // normal field
-        getString("cateory") ?: ""  // typo fallback
-    val imgUrl = getString("url") ?: "" // we’ll use product URL as the image URL for now
+        getString("category") ?:
+        getString("cateory") ?: ""
+    val imgUrl = getString("url") ?: ""
     val avgRating = getDouble("avgRating") ?: 0.0
     val ratingsCount = getLong("ratingsCount")?.toInt() ?: 0
 
@@ -131,16 +141,7 @@ private fun DocumentSnapshot.toItemFromProducts(): Item? {
 }
 
 /**
- * Map a document from ITEMS → Item
- *
- * Your custom docs look like:
- *  - name
- *  - brand
- *  - barcode
- *  - imgUrl
- *  - category
- *  - avgRating
- *  - ratingsCount
+ * Map a document from ITEMS → Item (legacy collection)
  */
 private fun DocumentSnapshot.toItemFromItems(): Item? {
     val id = id
@@ -163,3 +164,4 @@ private fun DocumentSnapshot.toItemFromItems(): Item? {
         ratingsCount = ratingsCount
     )
 }
+
