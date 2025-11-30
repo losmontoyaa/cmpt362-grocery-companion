@@ -69,7 +69,7 @@ class ShoppingListViewModel(
 
     /**
      * Compute total per store using cheapest price per item.
-     * itemId is BARCODE; FirebasePriceRepo looks products up by barcode.
+     * itemId is now the PRODUCT DOCUMENT ID (e.g. "ss17").
      */
     suspend fun computePerStoreTotals(
         userLat: Double? = null,
@@ -78,10 +78,9 @@ class ShoppingListViewModel(
         val items = list.value
         val allItemIds = items.map { it.itemId }.toSet()
 
-        // 🔹 fetch prices per BARCODE (itemId)
         val perItemPrices = mutableMapOf<String, List<Price>>()
         for (id in allItemIds) {
-            val pricesForItem = priceRepo.latestPricesForBarcode(id)
+            val pricesForItem = priceRepo.pricesForItemId(id)
             perItemPrices[id] = pricesForItem
         }
 
@@ -118,7 +117,7 @@ class ShoppingListViewModel(
     }
 
     /**
-     * For each item barcode, pick the cheapest store and convert it into a UI object.
+     * For each item (product ID), pick the cheapest store and convert it into a UI object.
      */
     suspend fun computePerItemCheapestUi(): Map<String, ItemPickUi> {
         val items = list.value
@@ -126,7 +125,7 @@ class ShoppingListViewModel(
 
         val perItemPrices = mutableMapOf<String, List<Price>>()
         for (id in ids) {
-            perItemPrices[id] = priceRepo.latestPricesForBarcode(id)
+            perItemPrices[id] = priceRepo.pricesForItemId(id)
         }
 
         val storeIds = perItemPrices.values

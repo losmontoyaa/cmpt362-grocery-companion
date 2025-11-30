@@ -29,7 +29,7 @@ class ItemViewModel(
     val storePrices: LiveData<List<Triple<Price, Store, Boolean>>> = _storePrices
 
     fun load() = viewModelScope.launch {
-        // 1) Load item meta from Firestore "items" collection
+        // 1) Load item meta from Firestore "products"/"items"
         val it = itemRepo.get(itemId) ?: run {
             _item.postValue(null)
             _storePrices.postValue(emptyList())
@@ -37,8 +37,8 @@ class ItemViewModel(
         }
         _item.postValue(it)
 
-        // 2) Use BARCODE to look up all store prices from "products"
-        val prices = priceRepo.latestPricesForBarcode(it.barcode)
+        // 2) Use PRODUCT DOCUMENT ID to look up price
+        val prices = priceRepo.pricesForItemId(it.id)
         if (prices.isEmpty()) {
             _storePrices.postValue(emptyList())
             return@launch
@@ -49,7 +49,7 @@ class ItemViewModel(
         // collect unique store ids
         val storeIds: Set<String> = prices.map { p -> p.storeId }.toSet()
 
-        // 3) Load store metadata from FirebaseStoreRepo (Costco/Walmart/etc.)
+        // 3) Load store metadata from FirebaseStoreRepo
         val stores: Map<String, Store> = storeRepo.getStores(storeIds)
 
         // 4) Build UI triples
@@ -65,8 +65,7 @@ class ItemViewModel(
     fun addToList(qty: Int) = viewModelScope.launch {
         val currentItem = _item.value ?: return@launch
 
-        // 1. Prefer barcode, else fall back to the Firestore item doc id
-        val rawKey = currentItem.barcode.ifBlank { currentItem.id }
+        val rawKey = currentItem.id
 
         // 2. Make it Firestore-safe: no slashes
         val safeKey = rawKey.replace("/", "_")
@@ -75,10 +74,7 @@ class ItemViewModel(
         listRepo.add(safeKey, qty)
     }
 
-
     fun updatePrice(storeId: String, newPrice: Double) = viewModelScope.launch {
-        // With your current Firestore shape (products = read-only scraped data),
-        // you probably do NOT want users overwriting those docs.
-        // If you later add a separate "userPrices" collection, you handle it here.
+        // Placeholder for future "userPrices" collection, if you add it later.
     }
 }

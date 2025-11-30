@@ -9,19 +9,23 @@ class FirebasePriceRepo {
     private val db = FirebaseFirestore.getInstance()
     private val products = db.collection("products")
 
-    suspend fun latestPricesForBarcode(barcode: String): List<Price> {
-        val snap = products
-            .whereEqualTo("barcode", barcode)
-            .get()
-            .await()
+    /**
+     * Return the price(s) for a given product document ID (e.g. "ss17").
+     *
+     * With your current Firestore shape (one price per product doc),
+     * this will usually return a single Price.
+     */
+    suspend fun pricesForItemId(itemId: String): List<Price> {
+        val doc = products.document(itemId).get().await()
+        if (!doc.exists()) return emptyList()
 
-        return snap.documents.mapNotNull { doc ->
-            val totalPrice = doc.getDouble("total_price") ?: return@mapNotNull null
-            val storeId = doc.getString("store_id") ?: return@mapNotNull null
-            val unitPrice = doc.getString("unit_price") ?: ""
+        val totalPrice = doc.getDouble("total_price") ?: return emptyList()
+        val storeId = doc.getString("store_id") ?: return emptyList()
+        val unitPrice = doc.getString("unit_price") ?: ""
 
+        return listOf(
             Price(
-                itemId = barcode,
+                itemId = itemId,
                 storeId = storeId,
                 price = totalPrice,
                 unit = unitPrice,
@@ -29,6 +33,6 @@ class FirebasePriceRepo {
                 isDeal = false,
                 source = "products"
             )
-        }
+        )
     }
 }

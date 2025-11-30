@@ -53,7 +53,10 @@ class ItemListViewModel(
         name: String,
         brand: String,
         barcode: String,
-        category: String
+        category: String,
+        storeName: String,
+        latitude: Double?,
+        longitude: Double?
     ) = viewModelScope.launch {
         try {
             val id = "item-${System.currentTimeMillis()}"
@@ -69,8 +72,12 @@ class ItemListViewModel(
                 ratingsCount = 0
             )
 
-            itemRepo.add(item)
-            // streamAll() will push the update, no manual refresh needed
+            itemRepo.add(
+                item = item,
+                storeName = storeName,
+                latitude = latitude,
+                longitude = longitude
+            )
         } catch (e: Exception) {
             _errorMessage.value = e.message ?: "Failed to add item."
         }

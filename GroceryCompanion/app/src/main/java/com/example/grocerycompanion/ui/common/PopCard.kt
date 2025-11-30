@@ -59,7 +59,7 @@ fun PopCard(
         elevation = CardDefaults.cardElevation(defaultElevation = elevation),
         onClick = onClick,
         interactionSource = interactionSource
-        // ❌ no indication parameter here – Material3 Card applies ripple itself
+
     ) {
         Box {
             content()

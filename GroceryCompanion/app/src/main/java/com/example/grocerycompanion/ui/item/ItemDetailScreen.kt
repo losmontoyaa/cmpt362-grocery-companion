@@ -1,6 +1,7 @@
 package com.example.grocerycompanion.ui.item
 
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,16 +36,17 @@ fun ItemDetailScreen(
 ) {
     val context = LocalContext.current
 
+    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "demoUser"
+
     val vm: ItemViewModel = viewModel(
-        key = "item-$itemId",   // one VM per item
+        key = "item-$itemId-$userId",
         factory = ViewModelFactory {
             ItemViewModel(
                 itemId = itemId,
                 itemRepo = FirebaseItemRepo(),
                 priceRepo = FirebasePriceRepo(),
                 storeRepo = FirebaseStoreRepo(),
-                // TODO: replace with real user ID from FirebaseAuth when ready
-                listRepo = FirebaseShoppingListRepo(userId = "demoUser")
+                listRepo = FirebaseShoppingListRepo(userId = userId)
             )
         }
     )
@@ -52,7 +54,6 @@ fun ItemDetailScreen(
     val item by vm.item.observeAsState()
     val storePrices by vm.storePrices.observeAsState(emptyList())
 
-    // Load once when itemId changes
     LaunchedEffect(itemId) {
         vm.load()
     }
@@ -129,7 +130,6 @@ fun ItemDetailScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Qty + Add to list
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -154,21 +154,6 @@ fun ItemDetailScreen(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-
-                Button(
-                    onClick = { onSeeNutrition(itemId.product_name) },   // item.name = your product’s name
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("See nutrition")
-                }
-
-
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-
                 Button(
                     onClick = {
                         scope.launch {
@@ -184,6 +169,19 @@ fun ItemDetailScreen(
                 ) {
                     Text("Add to List")
                 }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    item?.let { onSeeNutrition(it.name) }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            ) {
+                Text("See nutrition")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -266,8 +264,7 @@ private fun StorePriceRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                // 🔹 adapt to your new Price model:
-                // if you renamed fields to totalPrice / unitPrice, update this accordingly
+
                 Text(
                     text = "$${"%.2f".format(price.price)} ${price.unit}",
                     style = MaterialTheme.typography.bodyMedium,
