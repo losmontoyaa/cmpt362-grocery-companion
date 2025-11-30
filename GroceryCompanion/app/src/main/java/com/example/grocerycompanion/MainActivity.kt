@@ -309,6 +309,8 @@ fun GroceryApp() {
     var selectedTab by rememberSaveable { mutableStateOf(BottomTab.ITEMS) }
     var detailItemId by rememberSaveable { mutableStateOf<String?>(null) }
 
+    var nutritionItemName by rememberSaveable { mutableStateOf<String?>(null) }
+
     val title = when {
         detailItemId != null -> "Item details"
         selectedTab == BottomTab.ITEMS -> "Browse items"
@@ -356,15 +358,33 @@ fun GroceryApp() {
             modifier = Modifier.padding(padding),
             color = MaterialTheme.colorScheme.background
         ) {
-            if (detailItemId != null) {
-                ItemDetailScreen(
-                    itemId = detailItemId!!,
-                    onBack = { detailItemId = null }
-                )
-            } else {
-                when (selectedTab) {
-                    BottomTab.ITEMS -> ItemListScreen(onItemClick = { id -> detailItemId = id })
-                    BottomTab.LIST -> ShoppingListScreen()
+
+            when {
+                // nutrition screen
+                nutritionItemName != null -> {
+                    NutritionScreen(
+                        itemName = nutritionItemName!!,
+                        onBack = { nutritionItemName = null }
+                    )
+                }
+
+
+                detailItemId != null -> {
+                    ItemDetailScreen(
+                        itemId = detailItemId!!,
+                        onBack = { detailItemId = null },
+
+                        // callback to itemDetail screen
+                        onSeeNutrition = { itemName ->
+                            nutritionItemName = itemName
+                        }
+                    )
+                }
+                else -> {
+                    when (selectedTab) {
+                        BottomTab.ITEMS -> ItemListScreen(onItemClick = { id -> detailItemId = id })
+                        BottomTab.LIST -> ShoppingListScreen()
+                    }
                 }
             }
         }

@@ -6,6 +6,8 @@ plugins {
 
     // dependency for google services Gradle PlugIn
     id("com.google.gms.google-services") version "4.4.4" apply false
+
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0" apply false
 }
 
 buildscript {

@@ -8,6 +8,8 @@ plugins {
 
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 
+    id("org.jetbrains.kotlin.plugin.serialization")
+
 }
 
 repositories {
@@ -156,6 +158,17 @@ dependencies {
     implementation("com.aallam.openai:openai-client:3.7.0")
     implementation("io.ktor:ktor-client-okhttp:2.3.6")
     implementation(platform("io.ktor:ktor-bom:2.3.6"))
+
+    // Kotlinx Serialization Converter for parsing JSON
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+
+    // Kotlinx Serialization Runtime (for @Serializable annotation)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    // Coroutines for async operations (typically already included in Compose projects)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+
 
 
 }

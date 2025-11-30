@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ItemDetailScreen(
     itemId: String,
+    onSeeNutrition: (String) -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -152,6 +153,21 @@ fun ItemDetailScreen(
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
+
+
+                Button(
+                    onClick = { onSeeNutrition(itemId.product_name) },   // item.name = your product’s name
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("See nutrition")
+                }
+
+
+
+                Spacer(modifier = Modifier.width(12.dp))
+
 
                 Button(
                     onClick = {
