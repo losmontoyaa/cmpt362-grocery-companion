@@ -22,12 +22,16 @@ class RatingTestActivity : ComponentActivity() {
             GroceryCompanionTheme {
                 val viewModel = viewModel<RatingViewModel>()
                 val testItemId = "LD01"   // test ID
+                val testProductName = "2% Milk"
+                val brand = "Dairyland"
 
                 var selectedStars by remember { mutableStateOf<Int?>(null) }
 
                 if (selectedStars == null) {
                     RatingSection(
                         itemId = testItemId,
+                        product_name = testProductName,
+                        brand = brand,
                         viewModel = viewModel,
                         onStarPress = { stars ->
                             selectedStars = stars
@@ -35,11 +39,12 @@ class RatingTestActivity : ComponentActivity() {
                     )
                 } else {
                     NewRatingScreen(
-                        itemId = testItemId,
                         stars = selectedStars!!,
                         onSubmit = { comment ->
                             viewModel.submitRating(
                                 itemId = testItemId,
+                                productName = testProductName,
+                                brand = brand,
                                 stars = selectedStars!!,
                                 comment = comment,
                                 onSuccess = {

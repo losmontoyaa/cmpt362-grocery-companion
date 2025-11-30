@@ -21,12 +21,6 @@
         <activity
             android:name=".MapTestActivity"
             android:exported="true"
-            android:label="@string/title_activity_map_test"
-            android:theme="@style/Theme.GroceryCompanion" />
-
-        <activity
-            android:name=".MapTestActivity"
-            android:exported="true"
             android:label="@string/title_activity_map_test_activity.kt"
             android:theme="@style/Theme.GroceryCompanion" />
 

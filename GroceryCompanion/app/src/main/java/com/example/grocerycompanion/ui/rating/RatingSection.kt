@@ -15,11 +15,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun RatingSection(
     itemId: String,
+    product_name: String,
+    brand: String,
     viewModel: RatingViewModel = viewModel(),
     onStarPress: (Int) -> Unit
 ) {
-    LaunchedEffect(itemId) {
-        viewModel.loadRatings(itemId)
+    LaunchedEffect(product_name) {
+        viewModel.loadRatings(product_name, brand)
     }
     val ratings = viewModel.ratings
     val average = viewModel.averageRating

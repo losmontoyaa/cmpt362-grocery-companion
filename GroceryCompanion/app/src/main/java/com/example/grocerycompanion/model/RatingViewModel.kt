@@ -21,9 +21,10 @@ class RatingViewModel : ViewModel() {
     val averageRating: Double
         get() = if (ratings.isEmpty()) 0.0 else ratings.map { it.stars }.average()
 
-    fun loadRatings(itemId: String) {
+    fun loadRatings(productName: String, brand: String) {
         db.collection("ratings")
-            .whereEqualTo("itemId", itemId)
+            .whereEqualTo("product_name", productName)
+            .whereEqualTo("brand", brand)
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val loadedRatings = querySnapshot.documents.mapNotNull { doc ->
@@ -38,6 +39,8 @@ class RatingViewModel : ViewModel() {
 
     fun submitRating(
         itemId: String,
+        productName: String,
+        brand: String,
         stars: Int,
         comment: String,
         onSuccess: () -> Unit = {},
@@ -48,6 +51,8 @@ class RatingViewModel : ViewModel() {
         val newRating = Rating(
             id = UUID.randomUUID().toString(),
             itemId = itemId,
+            product_name = productName,
+            brand = brand,
             userId = userId ?: "",
             stars = stars,
             comment = comment,

@@ -19,11 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.grocerycompanion.model.Price
+import com.example.grocerycompanion.model.RatingViewModel
 import com.example.grocerycompanion.model.Store
 import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.repo.FirebasePriceRepo
 import com.example.grocerycompanion.repo.FirebaseShoppingListRepo
 import com.example.grocerycompanion.repo.FirebaseStoreRepo
+import com.example.grocerycompanion.ui.rating.AverageRatingDisplay
+import com.example.grocerycompanion.ui.rating.RatingDialog
+import com.example.grocerycompanion.ui.rating.RatingPreviewList
 import com.example.grocerycompanion.util.ViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -53,6 +57,8 @@ fun ItemDetailScreen(
     val item by vm.item.observeAsState()
     val storePrices by vm.storePrices.observeAsState(emptyList())
 
+    val ratingVm: RatingViewModel = viewModel()
+
     LaunchedEffect(itemId) {
         vm.load()
     }
@@ -77,142 +83,155 @@ fun ItemDetailScreen(
                             contentDescription = "Back"
                         )
                     }
-                }
+                },
+                windowInsets = WindowInsets(0, 0, 0, 0)
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            item?.let { it ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    elevation = CardDefaults.cardElevation(2.dp)
-                ) {
-                    Column {
-                        AsyncImage(
-                            model = it.imgUrl,
-                            contentDescription = it.name,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
+            item {
+                item?.let {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        elevation = CardDefaults.cardElevation(2.dp)
+                    ) {
+                        Column {
+                            AsyncImage(
+                                model = it.imgUrl,
+                                contentDescription = it.name,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = it.name,
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+
+                    if (it.brand.isNotBlank()) {
+                        Text(
+                            text = it.brand,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    }
+
+                    AverageRatingDisplay(it.avgRating, it.ratingsCount)
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Qty",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    OutlinedButton(onClick = { if (qty > 1) qty-- }) {
+                        Text("-")
+                    }
+                    Text(
+                        text = qty.toString(),
+                        modifier = Modifier
+                            .width(32.dp)
+                            .wrapContentWidth(Alignment.CenterHorizontally),
+                    )
+                    OutlinedButton(onClick = { if (qty < 99) qty++ }) {
+                        Text("+")
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                vm.addToList(qty)
+                                Toast.makeText(
+                                    context,
+                                    "Added $qty to list",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Add to List")
                     }
                 }
 
-                Text(
-                    text = it.name,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
-
-                if (it.brand.isNotBlank()) {
-                    Text(
-                        text = it.brand,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                Text(
-                    text = "${"%.1f".format(it.avgRating)} ★ (${it.ratingsCount} ratings)",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+                Spacer(modifier = Modifier.height(12.dp))
             }
+            item {
+                item?.let {
+                    Text("Leave a review:", style = MaterialTheme.typography.titleSmall)
+                    RatingDialog(it.id, it.name, it.brand)
 
-            Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Qty",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-
-                OutlinedButton(onClick = { if (qty > 1) qty-- }) {
-                    Text("-")
-                }
-                Text(
-                    text = qty.toString(),
-                    modifier = Modifier
-                        .width(32.dp)
-                        .wrapContentWidth(Alignment.CenterHorizontally),
-                )
-                OutlinedButton(onClick = { if (qty < 99) qty++ }) {
-                    Text("+")
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Button(
-                    onClick = {
-                        scope.launch {
-                            vm.addToList(qty)
-                            Toast.makeText(
-                                context,
-                                "Added $qty to list",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Add to List")
+                    Text("Recent reviews:", style = MaterialTheme.typography.titleSmall)
+                    ratingVm.loadRatings(it.name, it.brand)
+                    val ratings = ratingVm.ratings
+                    RatingPreviewList(ratings)
                 }
             }
+            item {
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Prices by Store",
-                style = MaterialTheme.typography.titleMedium
-            )
+                Text(
+                    text = "Prices by Store",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
 
             if (storePrices.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No price data yet.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp)
-                ) {
-                    items(storePrices) { (price, store, isCheapest) ->
-                        StorePriceRow(
-                            price = price,
-                            store = store,
-                            isCheapest = isCheapest,
-                            onQuickAdd = {
-                                scope.launch {
-                                    vm.addToList(1)
-                                    Toast.makeText(
-                                        context,
-                                        "Added to list",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No price data yet.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                }
+            } else {
+                items(storePrices) { (price, store, isCheapest) ->
+                    StorePriceRow(
+                        price = price,
+                        store = store,
+                        isCheapest = isCheapest,
+                        onQuickAdd = {
+                            scope.launch {
+                                vm.addToList(1)
+                                Toast.makeText(
+                                    context,
+                                    "Added to list",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    )
                 }
             }
         }

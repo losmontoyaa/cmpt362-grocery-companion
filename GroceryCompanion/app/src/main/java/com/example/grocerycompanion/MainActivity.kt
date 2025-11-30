@@ -93,6 +93,8 @@ private fun AppRoot() {
         var isLoggedIn by remember { mutableStateOf(false) }
         var authScreen by remember { mutableStateOf(AuthScreen.Login) }
 
+        isLoggedIn = true
+
         // Home flows
         var showGokuFlow by remember { mutableStateOf(false) }
         var showProfile by remember { mutableStateOf(false) }

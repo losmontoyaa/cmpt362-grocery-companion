@@ -1,7 +1,7 @@
 package com.example.grocerycompanion.ui.rating
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.StarHalf
@@ -19,11 +19,11 @@ import kotlin.math.floor
 
 // Displays the average rating with stars and text
 @Composable
-fun AverageRatingDisplay(average: Double = 3.5) {
+fun AverageRatingDisplay(average: Double = 3.5, ratingCount: Int = 0) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
         val numFullStars = floor(average).toInt()
-        val hasHalfStar = average - numFullStars in 0.25..<0.75
+        val hasHalfStar = average - numFullStars in 0.25..<1.0
 
         for (i in 1..5) {
             val icon = when {
@@ -33,7 +33,7 @@ fun AverageRatingDisplay(average: Double = 3.5) {
             }
 
             val tint = when {
-                i <= numFullStars || (i == numFullStars + 1 && hasHalfStar) -> Color.Yellow
+                i <= numFullStars || (i == numFullStars + 1 && hasHalfStar) -> Color(0xFFFFBF00)
                 else -> Color.Gray
             }
 
@@ -41,11 +41,14 @@ fun AverageRatingDisplay(average: Double = 3.5) {
                 imageVector = icon,
                 contentDescription = null,
                 tint = tint,
-                modifier = Modifier.width(22.dp)
+                modifier = Modifier.width(16.dp)
             )
         }
 
-        Spacer(Modifier.width(6.dp))
-        Text(String.format("%.1f", average), style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = String.format("%.1f (%d)", average, ratingCount),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.offset(x = 2.dp, y = 1.dp)
+            )
     }
 }
