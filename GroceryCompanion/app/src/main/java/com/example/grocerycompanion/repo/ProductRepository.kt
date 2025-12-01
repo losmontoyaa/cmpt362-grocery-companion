@@ -6,10 +6,11 @@ import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 
 class ProductRepository {
-    suspend fun getProductByName(productName: String): List<Product> {
+    suspend fun getProductByNameAndBrand(productName: String, brand: String): List<Product> {
         val db = Firebase.firestore
         return db.collection("products")
             .whereEqualTo("product_name", productName)
+            .whereEqualTo("brand", brand)
             .get()
             .await()
             .documents

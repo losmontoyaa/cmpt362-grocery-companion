@@ -1,5 +1,6 @@
 package com.example.grocerycompanion.ui.item
 
+import android.app.Application
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.foundation.layout.*
@@ -8,26 +9,33 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.grocerycompanion.model.Price
+import com.example.grocerycompanion.model.LocationViewModel
+import com.example.grocerycompanion.model.ProductSearchViewModel
 import com.example.grocerycompanion.model.RatingViewModel
-import com.example.grocerycompanion.model.Store
 import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.repo.FirebasePriceRepo
 import com.example.grocerycompanion.repo.FirebaseShoppingListRepo
 import com.example.grocerycompanion.repo.FirebaseStoreRepo
+import com.example.grocerycompanion.ui.map.MapScreen
 import com.example.grocerycompanion.ui.rating.AverageRatingDisplay
 import com.example.grocerycompanion.ui.rating.RatingDialog
 import com.example.grocerycompanion.ui.rating.RatingPreviewList
+import com.example.grocerycompanion.util.LocationViewModelFactory
 import com.example.grocerycompanion.util.ViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -58,6 +66,29 @@ fun ItemDetailScreen(
     val storePrices by vm.storePrices.observeAsState(emptyList())
 
     val ratingVm: RatingViewModel = viewModel()
+    val productVm: ProductSearchViewModel = viewModel()
+    val locationVm: LocationViewModel = viewModel(
+        factory = LocationViewModelFactory(context.applicationContext as Application)
+    )
+
+    // products holds a list of products and the distance from user coordinates to the product's store location
+    val products by productVm.products.collectAsState()
+    val userLocation by locationVm.location.collectAsState()
+
+    LaunchedEffect(Unit) {
+        locationVm.loadLocation()
+    }
+
+    LaunchedEffect(userLocation, item?.name, item?.brand) {
+        if (userLocation != null && item != null) {
+            productVm.searchProducts(
+                item!!.name,
+                item!!.brand,
+                userLocation!!.latitude,
+                userLocation!!.longitude
+            )
+        }
+    }
 
     LaunchedEffect(itemId) {
         vm.load()
@@ -65,6 +96,11 @@ fun ItemDetailScreen(
 
     var qty by remember { mutableStateOf(1) }
     val scope = rememberCoroutineScope()
+
+    var showMapDialog by remember { mutableStateOf(false) }
+    var selectedStoreLat by remember { mutableStateOf(0.0) }
+    var selectedStoreLng by remember { mutableStateOf(0.0) }
+    var selectedStoreName by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -216,11 +252,14 @@ fun ItemDetailScreen(
                     }
                 }
             } else {
-                items(storePrices) { (price, store, isCheapest) ->
+                val cheapestPrice = products.minOfOrNull{ it.first.total_price } ?: 0.0
+                items(products) { (product, distance) ->
                     StorePriceRow(
-                        price = price,
-                        store = store,
-                        isCheapest = isCheapest,
+                        price = product.total_price,
+                        size = product.size,
+                        store = product.store_name,
+                        isCheapest = product.total_price <= cheapestPrice,
+                        distance = distance,
                         onQuickAdd = {
                             scope.launch {
                                 vm.addToList(1)
@@ -230,20 +269,48 @@ fun ItemDetailScreen(
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+                        },
+                        onOpenMap = {
+                            selectedStoreLat = product.location?.latitude ?: 0.0
+                            selectedStoreLng = product.location?.longitude ?: 0.0
+                            selectedStoreName = product.store_name
+                            showMapDialog = true
                         }
                     )
                 }
             }
         }
     }
+    if (showMapDialog) {
+        AlertDialog(
+            onDismissRequest = { showMapDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showMapDialog = false }) {
+                    Text("Close")
+                }
+            },
+            text = {
+                MapScreen(
+                    userLat = userLocation?.latitude ?: 0.0,
+                    userLng = userLocation?.longitude ?: 0.0,
+                    storeLat = selectedStoreLat,
+                    storeLng = selectedStoreLng,
+                    storeName = selectedStoreName
+                )
+            }
+        )
+    }
 }
 
 @Composable
 private fun StorePriceRow(
-    price: Price,
-    store: Store,
+    price: Double,
+    size: String,
+    store: String,
     isCheapest: Boolean,
-    onQuickAdd: () -> Unit
+    distance: Double,
+    onQuickAdd: () -> Unit,
+    onOpenMap: () -> Unit
 ) {
     val bgColor =
         if (isCheapest) MaterialTheme.colorScheme.surfaceVariant
@@ -264,16 +331,22 @@ private fun StorePriceRow(
         ) {
             Column(Modifier.weight(1f)) {
                 Text(
-                    text = store.name,
+                    text = store,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
 
                 Text(
-                    text = "$${"%.2f".format(price.price)} ${price.unit}",
+                    text = "$${"%.2f".format(price)} $size",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "${"%.1f".format(distance)} km",
+                    fontSize = 12.sp,
+                    color = Color.DarkGray,
+                    lineHeight = 14.sp
                 )
                 if (isCheapest) {
                     Text(
@@ -282,6 +355,10 @@ private fun StorePriceRow(
                         color = MaterialTheme.colorScheme.secondary
                     )
                 }
+            }
+
+            IconButton(onClick = onOpenMap) {
+                Icon(imageVector = Icons.Default.Place, contentDescription = "Open map")
             }
 
             IconButton(onClick = onQuickAdd) {

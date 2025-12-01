@@ -93,8 +93,6 @@ private fun AppRoot() {
         var isLoggedIn by remember { mutableStateOf(false) }
         var authScreen by remember { mutableStateOf(AuthScreen.Login) }
 
-        isLoggedIn = true
-
         // Home flows
         var showGokuFlow by remember { mutableStateOf(false) }
         var showProfile by remember { mutableStateOf(false) }
@@ -114,6 +112,20 @@ private fun AppRoot() {
                 ) == PackageManager.PERMISSION_GRANTED
             )
         }
+
+        val hasLocationPermission = remember {
+            mutableStateOf(
+                ContextCompat.checkSelfPermission(
+                    ctx,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            )
+        }
+
+        val locationPermissionLauncher =
+            rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+                hasLocationPermission.value = granted
+            }
 
         // Receipt photo launcher
         val receiptCameraLauncher =
@@ -142,6 +154,12 @@ private fun AppRoot() {
                         arrayOf(Manifest.permission.CAMERA),
                         1
                     )
+                }
+            }
+
+            LaunchedEffect(Unit) {
+                if (!hasLocationPermission.value) {
+                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
             }
 

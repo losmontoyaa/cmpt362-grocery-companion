@@ -43,6 +43,7 @@ class MapTestActivity : ComponentActivity() {
 
                         val viewModel: ProductSearchViewModel = viewModel()
                         val itemName = "2% Milk"
+                        val brand = "Dairyland"
                         // TODO: Implement location services
                         // Hard-code SFU for user location for now
                         val userLat = 49.27897658366635
@@ -50,7 +51,7 @@ class MapTestActivity : ComponentActivity() {
                         val products by viewModel.products.collectAsState()
 
                         LaunchedEffect(Unit) {
-                            viewModel.searchProducts(itemName, userLat, userLng)
+                            viewModel.searchProducts(itemName, brand, userLat, userLng)
                         }
 
                         Column(

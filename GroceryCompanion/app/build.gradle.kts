@@ -159,5 +159,6 @@ dependencies {
     implementation("io.ktor:ktor-client-okhttp:2.3.6")
     implementation(platform("io.ktor:ktor-bom:2.3.6"))
 
-
+    // Location Services
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 }
