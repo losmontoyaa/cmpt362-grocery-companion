@@ -1,6 +1,7 @@
 package com.example.grocerycompanion.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,7 +49,8 @@ fun StartUpScreen(
     onSearch: (SearchInput) -> Unit,
     onScanBarcodeClick: () -> Unit,
     onScanReceiptClick: () -> Unit,
-    onOpenItemList: () -> Unit = {}
+    onOpenItemList: () -> Unit = {},
+    onOpenProfile: () -> Unit = {}
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -66,6 +68,20 @@ fun StartUpScreen(
             modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.profile_button_icon),
+                    contentDescription = "Profile",
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clickable { onOpenProfile() },
+                    tint = Color.Unspecified
+                )
+            }
 
             Spacer(Modifier.height(48.dp))
 
@@ -133,7 +149,8 @@ fun StartUpScreen(
                 Text("Scan Barcode Lookup")
             }
 
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(16.dp))
+
 
             Button(
                 onClick = onScanReceiptClick,
@@ -142,7 +159,7 @@ fun StartUpScreen(
             ) {
                 Icon(Icons.Filled.CameraAlt, null)
                 Spacer(Modifier.width(8.dp))
-                Text("Scan Receipt")
+                Text("Scan Receipt Lookup")
             }
         }
 
@@ -154,7 +171,7 @@ fun StartUpScreen(
                 .imePadding(),   // when keyboard up
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(4.dp))
             Image(
                 painter = painterResource(id = R.drawable.grocery_basket),
                 contentDescription = null,
@@ -190,43 +207,3 @@ sealed interface SearchInput {
     @JvmInline value class ProductName(val value: String) : SearchInput
     @JvmInline value class Barcode(val digits: String) : SearchInput
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

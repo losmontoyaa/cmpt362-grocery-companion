@@ -1,11 +1,13 @@
 <resources>
     <!-- Use stable MaterialComponents theme -->
     <style name="Theme.GroceryCompanion" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+        <!-- Status bar + nav bar -->
         <!-- System bars -->
         <item name="android:statusBarColor">@color/brand_primary</item>
         <item name="android:navigationBarColor">@color/surface_card</item>
 
-        <!-- Brand -->
+        <!-- Brand colors (still used by some system components) -->
         <item name="colorPrimary">@color/brand_primary</item>
         <item name="colorSecondary">@color/brand_secondary</item>
 
@@ -35,3 +37,5 @@
     </style>
 
 </resources>
+
+

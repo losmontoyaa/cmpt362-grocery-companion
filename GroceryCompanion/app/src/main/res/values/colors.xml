@@ -1,16 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Brand -->
-    <color name="brand_primary">#16A34A</color>      <!-- Green -->
-    <color name="brand_secondary">#7C3AED</color>    <!-- Violet -->
-    <color name="brand_accent">#FACC15</color>       <!-- Yellow -->
+    <color name="brand_primary">#10436A</color>
+    <color name="brand_secondary">#7C3AED</color>
+    <color name="brand_accent">#FAEC15</color>
+
+    <!-- Text -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#687280</color>
 
     <!-- Neutrals -->
     <color name="surface_bg">#FAFAFA</color>
     <color name="surface_card">#FFFFFF</color>
-    <color name="text_primary">#111827</color>
-    <color name="text_secondary">#6B7280</color>
-
-    <!-- Add missing ones referenced by styles -->
     <color name="surface_variant">#E7E7E7</color>
-    <color name="white">#FFFFFF</color>
+
+    <!-- Common global -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- Extra palette from Carlos -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
 </resources>
