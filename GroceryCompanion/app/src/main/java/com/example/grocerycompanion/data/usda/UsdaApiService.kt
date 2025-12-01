@@ -8,7 +8,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 const val BASE_URL = "https://api.nal.usda.gov/fdc/v1/"
-const val API_KEY = "DEMO_KEY"   // replace with your key later
+
+const val API_KEY ="NrZzpJbJwwim1cRM58pQLRAYD4EBZDYmBbx0I2PR"
 
 interface UsdaApiService {
     @GET("foods/search")

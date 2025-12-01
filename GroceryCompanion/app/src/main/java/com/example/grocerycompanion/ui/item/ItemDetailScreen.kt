@@ -63,24 +63,39 @@ fun ItemDetailScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = item?.name ?: "Item details",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+                shadowElevation = 4.dp
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                ) {
+                    // Back button aligned left
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
+
+                    // Centered product name
+                    Text(
+                        text = item?.name ?: "Item details",
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
-            )
+            }
         }
+
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -89,10 +104,11 @@ fun ItemDetailScreen(
                 .padding(16.dp)
         ) {
             item?.let { it ->
+                // Image card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .padding(top = 4.dp),
                     elevation = CardDefaults.cardElevation(2.dp)
                 ) {
                     Column {
@@ -106,30 +122,51 @@ fun ItemDetailScreen(
                     }
                 }
 
-                Text(
-                    text = it.name,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(top = 12.dp)
-                )
+                // Info on left, See nutrition button on right
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = it.name,
+                            style = MaterialTheme.typography.headlineSmall,
+                        )
 
-                if (it.brand.isNotBlank()) {
-                    Text(
-                        text = it.brand,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                        if (it.brand.isNotBlank()) {
+                            Text(
+                                text = it.brand,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        Text(
+                            text = "${"%.1f".format(it.avgRating)} ★ (${it.ratingsCount} ratings)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Button(
+                        onClick = { onSeeNutrition(it.name) },
+                        modifier = Modifier.widthIn(min = 120.dp)
+                    ) {
+                        Text("See nutrition")
+                    }
                 }
-
-                Text(
-                    text = "${"%.1f".format(it.avgRating)} ★ (${it.ratingsCount} ratings)",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Qty + Add to list row
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -142,12 +179,14 @@ fun ItemDetailScreen(
                 OutlinedButton(onClick = { if (qty > 1) qty-- }) {
                     Text("-")
                 }
+
                 Text(
                     text = qty.toString(),
                     modifier = Modifier
                         .width(32.dp)
-                        .wrapContentWidth(Alignment.CenterHorizontally),
+                        .wrapContentWidth(Alignment.CenterHorizontally)
                 )
+
                 OutlinedButton(onClick = { if (qty < 99) qty++ }) {
                     Text("+")
                 }
@@ -169,19 +208,6 @@ fun ItemDetailScreen(
                 ) {
                     Text("Add to List")
                 }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = {
-                    item?.let { onSeeNutrition(it.name) }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-            ) {
-                Text("See nutrition")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -288,3 +314,4 @@ private fun StorePriceRow(
         }
     }
 }
+

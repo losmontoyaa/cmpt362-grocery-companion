@@ -364,9 +364,10 @@ fun GroceryApp(
                         }
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,        // green background
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,   // text color (white)
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         },

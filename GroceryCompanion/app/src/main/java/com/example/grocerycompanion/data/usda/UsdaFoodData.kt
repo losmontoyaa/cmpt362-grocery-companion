@@ -5,21 +5,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UsdaSearchResponse(
-    val foods: List<FoodItem> = emptyList()
+    @SerialName("foods") val foods: List<FoodItem> = emptyList()
 )
 
 @Serializable
 data class FoodItem(
-    val description: String,
-    val fdcId: Int,
-    val foodNutrients: List<FoodNutrient> = emptyList()
+    @SerialName("description") val description: String,
+    @SerialName("fdcId") val fdcId: Int,
+    @SerialName("foodNutrients") val foodNutrients: List<FoodNutrient> = emptyList()
 )
 
 @Serializable
 data class FoodNutrient(
-    @SerialName("nutrientId") val id: Int? = null,
-    @SerialName("nutrientName") val name: String,
-    @SerialName("nutrientNumber") val number: String? = null,
-    val unitName: String,
-    @SerialName("value") val amount: Float
+    @SerialName("nutrientName") val nutrientName: String,
+    @SerialName("unitName") val unitName: String,          // "G", "KCAL", etc.
+    @SerialName("value") val amount: Float,                // numeric amount
+    @SerialName("nutrientId") val nutrientId: Int? = null  // may be null in some records
 )
