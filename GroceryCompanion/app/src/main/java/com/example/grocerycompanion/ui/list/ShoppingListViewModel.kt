@@ -2,8 +2,10 @@ package com.example.grocerycompanion.ui.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.grocerycompanion.model.Item
 import com.example.grocerycompanion.model.Price
 import com.example.grocerycompanion.model.ShoppingListItem
+import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.repo.FirebasePriceRepo
 import com.example.grocerycompanion.repo.FirebaseShoppingListRepo
 import com.example.grocerycompanion.repo.FirebaseStoreRepo
@@ -29,11 +31,16 @@ data class StoreTotal(
 class ShoppingListViewModel(
     private val listRepo: FirebaseShoppingListRepo,
     private val priceRepo: FirebasePriceRepo,
-    private val storeRepo: FirebaseStoreRepo
+    private val storeRepo: FirebaseStoreRepo,
+    private val itemRepo: FirebaseItemRepo
 ) : ViewModel() {
 
     private val _list = MutableStateFlow<List<ShoppingListItem>>(emptyList())
     val list: StateFlow<List<ShoppingListItem>> = _list
+
+    // 🔹 productId (e.g. "ss17") -> Item (from products collection)
+    private val _productsById = MutableStateFlow<Map<String, Item>>(emptyMap())
+    val productsById: StateFlow<Map<String, Item>> = _productsById
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -59,7 +66,28 @@ class ShoppingListViewModel(
                 .collect { items ->
                     _list.value = items
                     _isLoading.value = false
+
+                    // Whenever the list changes, refresh product details for those IDs
+                    launch {
+                        loadProductsForList(items)
+                    }
                 }
+        }
+    }
+
+    private suspend fun loadProductsForList(items: List<ShoppingListItem>) {
+        try {
+            val ids = items.map { it.itemId }.toSet()
+            val map = mutableMapOf<String, Item>()
+            for (id in ids) {
+                val product = itemRepo.get(id)
+                if (product != null) {
+                    map[id] = product
+                }
+            }
+            _productsById.value = map
+        } catch (e: Exception) {
+            // Silent fail – list still works, just shows IDs if lookup fails
         }
     }
 
@@ -69,53 +97,94 @@ class ShoppingListViewModel(
 
     /**
      * Compute total per store using cheapest price per item.
-     * itemId is now the PRODUCT DOCUMENT ID (e.g. "ss17").
+     * itemId is the PRODUCT DOCUMENT ID (e.g. "ss17").
      */
     suspend fun computePerStoreTotals(
         userLat: Double? = null,
         userLng: Double? = null
     ): List<StoreTotal> {
         val items = list.value
-        val allItemIds = items.map { it.itemId }.toSet()
+        if (items.isEmpty()) return emptyList()
 
+        // Each ShoppingListItem.itemId is your product doc ID (e.g. "ss17")
+        val itemIds = items.map { it.itemId }.toSet()
+
+        // 1) Load all prices for each product ID
         val perItemPrices = mutableMapOf<String, List<Price>>()
-        for (id in allItemIds) {
-            val pricesForItem = priceRepo.pricesForItemId(id)
-            perItemPrices[id] = pricesForItem
+        for (id in itemIds) {
+            perItemPrices[id] = priceRepo.pricesForItemId(id)
         }
 
+        // 2) Find all stores that appear anywhere
         val allStoreIds = perItemPrices.values
             .flatten()
             .map { it.storeId }
             .toSet()
 
-        val stores = storeRepo.getStores(allStoreIds)
+        // 3) Keep only stores that have a price for EVERY item in the list
+        var candidateStores = allStoreIds.toMutableSet()
+        for (id in itemIds) {
+            val storesForItem = perItemPrices[id]
+                .orEmpty()
+                .map { it.storeId }
+                .toSet()
 
-        val totals = mutableMapOf<String, Double>() // storeId -> total
-        items.forEach { sli ->
-            val prices = perItemPrices[sli.itemId].orEmpty()
-            val cheapest = prices.minByOrNull { it.price } ?: return@forEach
-            totals[cheapest.storeId] =
-                (totals[cheapest.storeId] ?: 0.0) + (cheapest.price * sli.qty)
+            candidateStores.retainAll(storesForItem)
         }
 
-        return totals.map { (sid, total) ->
-            val s = stores[sid]
-            val dist = if (s != null && userLat != null && userLng != null) {
-                haversineKm(userLat, userLng, s.lat, s.lng)
-            } else null
-            StoreTotal(
-                storeId = sid,
-                storeName = s?.name ?: sid,
-                total = total,
-                distanceKm = dist
-            )
-        }.sortedWith(
+        // If no store covers the full list, there is no meaningful
+        // "Best overall store" → return empty so UI hides the hero.
+        if (candidateStores.isEmpty()) {
+            return emptyList()
+        }
+
+        // 4) Load store metadata only for candidate stores
+        val stores = storeRepo.getStores(candidateStores)
+
+        // 5) Compute total for each candidate store
+        val totals = mutableListOf<StoreTotal>()
+
+        for (sid in candidateStores) {
+            var total = 0.0
+            var missingPrice = false
+
+            for (sli in items) {
+                // price for *this specific item* at this store
+                val priceForThisStore = perItemPrices[sli.itemId]
+                    ?.filter { it.storeId == sid }
+                    ?.minByOrNull { it.price }
+
+                if (priceForThisStore == null) {
+                    // should not happen because we filtered candidateStores,
+                    // but be safe and drop this store if any price is missing
+                    missingPrice = true
+                    break
+                } else {
+                    total += priceForThisStore.price * sli.qty
+                }
+            }
+
+            if (!missingPrice) {
+                val s = stores[sid]
+                val dist = if (s != null && userLat != null && userLng != null) {
+                    haversineKm(userLat, userLng, s.lat, s.lng)
+                } else null
+
+                totals += StoreTotal(
+                    storeId = sid,
+                    storeName = s?.name ?: sid,
+                    total = total,
+                    distanceKm = dist
+                )
+            }
+        }
+
+        // 6) Sort cheapest total first, then by distance
+        return totals.sortedWith(
             compareBy<StoreTotal> { it.total }
                 .thenBy { it.distanceKm ?: Double.MAX_VALUE }
         )
     }
-
     /**
      * For each item (product ID), pick the cheapest store and convert it into a UI object.
      */
@@ -152,3 +221,4 @@ class ShoppingListViewModel(
 
     suspend fun setQty(itemId: String, qty: Int) = listRepo.setQty(itemId, qty)
 }
+
