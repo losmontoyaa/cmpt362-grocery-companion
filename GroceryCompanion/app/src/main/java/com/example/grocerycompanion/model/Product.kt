@@ -1,6 +1,7 @@
 package com.example.grocerycompanion.model
 
 import com.google.firebase.firestore.GeoPoint
+import io.ktor.http.Url
 
 data class Product(
     val id: String = "",
@@ -16,5 +17,7 @@ data class Product(
     val store_name: String = "",
     val total_price: Double = 0.0,
     val unit_price: String = "",
-    val url: String = ""
+    val url: String = "",
+
+    val imgUrl: String? = null
 )

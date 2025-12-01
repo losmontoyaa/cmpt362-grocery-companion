@@ -124,7 +124,7 @@ private fun DocumentSnapshot.toItemFromProducts(): Item? {
     val category =
         getString("category") ?:
         getString("cateory") ?: ""
-    val imgUrl = getString("url") ?: ""
+    val imgUrl = getString("imgUrl") ?: ""
     val avgRating = getDouble("avgRating") ?: 0.0
     val ratingsCount = getLong("ratingsCount")?.toInt() ?: 0
 
@@ -149,7 +149,7 @@ private fun DocumentSnapshot.toItemFromItems(): Item? {
     val brand = getString("brand") ?: ""
     val barcode = getString("barcode") ?: ""
     val category = getString("category") ?: ""
-    val imgUrl = getString("imgUrl") ?: ""
+    val imgUrl = getString("imgUrl") ?: getString("imgUrl") ?: "" // updated by nav
     val avgRating = getDouble("avgRating") ?: 0.0
     val ratingsCount = getLong("ratingsCount")?.toInt() ?: 0
 
