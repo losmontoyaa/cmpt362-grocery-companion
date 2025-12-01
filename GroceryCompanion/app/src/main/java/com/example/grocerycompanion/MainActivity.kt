@@ -229,12 +229,22 @@ private fun AppRoot() {
                                     )
                                 }
 
-                                showReceiptInfo = false
+                                Toast.makeText(
+                                    ctx,
+                                    "Items added to search! Thank you for contributing!",
+                                    Toast.LENGTH_LONG
+                                ).show()
                                 parsedReceipt = null
+                                showReceiptInfo = false
                             }
 
                         },
                         onClose = {
+                            Toast.makeText(
+                                ctx,
+                                "Receipt Scan Cancelled.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             parsedReceipt = null
                             showReceiptInfo = false
                         }
@@ -305,7 +315,9 @@ private fun AppRoot() {
                         AuthScreen.Login -> LoginScreen(
                             onLogin = { email, password ->
                                 auth.signInWithEmailAndPassword(email, password)
-                                    .addOnSuccessListener { isLoggedIn = true }
+                                    .addOnSuccessListener {
+                                        isLoggedIn = true
+                                        }
                                     .addOnFailureListener {
                                         Toast.makeText(
                                             ctx,
@@ -486,7 +498,7 @@ private fun extractReceipt(context: Context, uri: Uri, onResult: (Receipt?) -> U
 // Using OpenAI, the content of the receipt is interpreted and put into a usable format.
 private fun analyzeReceiptText(extractedText: String, onResult: (Receipt?) -> Unit) {
 
-    val client = OpenAI("")
+    val client = OpenAI("[INSERT OPEN AI KEY HERE]")
 
     //Carlos Added: last line of prompt changed slightly.
     CoroutineScope(Dispatchers.IO).launch {

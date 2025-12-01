@@ -159,7 +159,7 @@ fun StartUpScreen(
             ) {
                 Icon(Icons.Filled.CameraAlt, null)
                 Spacer(Modifier.width(8.dp))
-                Text("Scan Receipt Lookup")
+                Text("Scan Receipt")
             }
         }
 
