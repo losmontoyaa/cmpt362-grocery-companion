@@ -38,7 +38,7 @@ class ShoppingListViewModel(
     private val _list = MutableStateFlow<List<ShoppingListItem>>(emptyList())
     val list: StateFlow<List<ShoppingListItem>> = _list
 
-    // 🔹 productId (e.g. "ss17") -> Item (from products collection)
+    // productId (e.g. "ss17") -> Item (from products collection)
     private val _productsById = MutableStateFlow<Map<String, Item>>(emptyMap())
     val productsById: StateFlow<Map<String, Item>> = _productsById
 

@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ShoppingListScreen() {
-    // ✅ Use Firebase user (or demo fallback)
+    // Use Firebase user (or demo fallback)
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "demoUser"
 
     val vm: ShoppingListViewModel = viewModel(
@@ -68,7 +68,7 @@ fun ShoppingListScreen() {
     }
     val scope = rememberCoroutineScope()
 
-    // 🔁 Auto recompute totals & per-item recommendations whenever list changes
+    // Auto recompute totals & per-item recommendations whenever list changes
     LaunchedEffect(items) {
         if (items.isNotEmpty()) {
             val totals = vm.computePerStoreTotals()
@@ -131,7 +131,7 @@ fun ShoppingListScreen() {
                 )
             }
 
-            // ⭐ Hero "Best overall store"
+            // Hero "Best overall store"
             val bestStore = storeTotals.firstOrNull()
 
             AnimatedVisibility(visible = bestStore != null) {
@@ -256,7 +256,7 @@ fun ShoppingListScreen() {
                 }
             }
 
-            // 🔽 TOTAL PRICE SECTION AT BOTTOM
+            // TOTAL PRICE SECTION AT BOTTOM
             if (items.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Card(
@@ -379,4 +379,3 @@ private fun ShoppingListRow(
         }
     }
 }
-

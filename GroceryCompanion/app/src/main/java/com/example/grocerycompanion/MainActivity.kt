@@ -24,11 +24,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -56,6 +58,7 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.graphics.Color
 
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
@@ -359,8 +362,12 @@ fun GroceryApp(
                 navigationIcon = {
                     // Only show Home button when not inside detail screen
                     if (detailItemId == null) {
-                        TextButton(onClick = onBackToHome) {
-                            Text("Home")
+                        IconButton(onClick = onBackToHome) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = Color.White
+                            )
                         }
                     }
                 },
@@ -468,7 +475,7 @@ private fun extractReceipt(context: Context, uri: Uri, onResult: (String) -> Uni
 
 // Using OpenAI, the content of the receipt is interpreted and put into a usable format.
 private fun analyzeReceiptText(extractedText: String, onResult: (String) -> Unit) {
-    // ⚠️ IMPORTANT: Do NOT commit your real API key.
+    // IMPORTANT: Do NOT commit your real API key.
     // Recommended: expose it via BuildConfig and local.properties:
     // val client = OpenAI(BuildConfig.OPENAI_API_KEY)
 
