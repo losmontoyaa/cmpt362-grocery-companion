@@ -2,6 +2,7 @@ package com.example.grocerycompanion.ui.item
 
 import android.app.Application
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -102,6 +103,9 @@ fun ItemDetailScreen(
     var selectedStoreLng by remember { mutableStateOf(0.0) }
     var selectedStoreName by remember { mutableStateOf("") }
 
+    var showPriceDialog by remember { mutableStateOf(false) }
+    var newPrice by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -162,6 +166,19 @@ fun ItemDetailScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+
+                    // --------------CHANGE PRICE TEXT----------------
+                    // Move wherever you please
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "Change Price",
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .clickable { showPriceDialog = true }
+                            .padding(vertical = 4.dp) //
+                    )
+                    // ----------------------------------------------
 
                     AverageRatingDisplay(it.avgRating, it.ratingsCount)
                 }
@@ -281,6 +298,8 @@ fun ItemDetailScreen(
             }
         }
     }
+
+    // Pop up to show the directions on a map to the store
     if (showMapDialog) {
         AlertDialog(
             onDismissRequest = { showMapDialog = false },
@@ -297,6 +316,43 @@ fun ItemDetailScreen(
                     storeLng = selectedStoreLng,
                     storeName = selectedStoreName
                 )
+            }
+        )
+    }
+
+    if (showPriceDialog) {
+        AlertDialog(
+            onDismissRequest = { showPriceDialog = false },
+            title = { Text("Update Price") },
+            text = {
+                OutlinedTextField(
+                    value = newPrice,
+                    onValueChange = { newPrice = it },
+                    label = { Text("New Price") },
+                    singleLine = true
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    val priceDouble = newPrice.toDoubleOrNull()
+                    // TODO: Add range check here. Need to get the current item's price somewhere, which I struggled with
+                    if (priceDouble != null) {
+                        scope.launch {
+                            vm.updatePrice(priceDouble)
+                            Toast.makeText(context, "Price updated", Toast.LENGTH_SHORT).show()
+                            showPriceDialog = false
+                        }
+                    } else {
+                        Toast.makeText(context, "Enter a valid number", Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Text("Save")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPriceDialog = false }) {
+                    Text("Cancel")
+                }
             }
         )
     }

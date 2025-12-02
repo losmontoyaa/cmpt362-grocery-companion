@@ -11,9 +11,6 @@ class FirebasePriceRepo {
 
     /**
      * Return the price(s) for a given product document ID (e.g. "ss17").
-     *
-     * With your current Firestore shape (one price per product doc),
-     * this will usually return a single Price.
      */
     suspend fun pricesForItemId(itemId: String): List<Price> {
         val doc = products.document(itemId).get().await()
@@ -34,5 +31,13 @@ class FirebasePriceRepo {
                 source = "products"
             )
         )
+    }
+
+    // Given an itemId, update its price with a new price
+    suspend fun updatePrice(itemId: String, newPrice: Double) {
+        products
+            .document(itemId)
+            .update("total_price", newPrice)
+            .await()
     }
 }

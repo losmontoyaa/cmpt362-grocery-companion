@@ -12,6 +12,7 @@ import com.example.grocerycompanion.model.RatingViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 // Overview of the ratings and comments on a product. When a star is pressed on the Interactive star bar, it triggers the NewRatingScreen to appear.
+// NOT USED IN FINAL VERSION
 @Composable
 fun RatingSection(
     itemId: String,

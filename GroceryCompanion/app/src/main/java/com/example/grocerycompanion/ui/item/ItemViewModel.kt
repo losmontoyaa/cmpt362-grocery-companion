@@ -74,7 +74,18 @@ class ItemViewModel(
         listRepo.add(safeKey, qty)
     }
 
-    fun updatePrice(storeId: String, newPrice: Double) = viewModelScope.launch {
-        // Placeholder for future "userPrices" collection, if you add it later.
+    // Update the price of the item to the database
+    fun updatePrice(newPrice: Double) = viewModelScope.launch {
+        val currentItem = _item.value ?: return@launch
+
+        val priceEntry = _storePrices.value
+            ?.firstOrNull { it.first.itemId == currentItem.id }
+            ?.first
+
+        if (priceEntry != null) {
+            priceRepo.updatePrice(priceEntry.itemId, newPrice = newPrice)
+
+            load()
+        }
     }
 }

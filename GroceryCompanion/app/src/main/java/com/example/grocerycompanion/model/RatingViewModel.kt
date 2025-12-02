@@ -21,6 +21,7 @@ class RatingViewModel : ViewModel() {
     val averageRating: Double
         get() = if (ratings.isEmpty()) 0.0 else ratings.map { it.stars }.average()
 
+    // Get ratings that match the product name and brand
     fun loadRatings(productName: String, brand: String) {
         db.collection("ratings")
             .whereEqualTo("product_name", productName)
@@ -37,6 +38,7 @@ class RatingViewModel : ViewModel() {
             }
     }
 
+    //
     fun submitRating(
         itemId: String,
         productName: String,
