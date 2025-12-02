@@ -1,14 +1,8 @@
 package com.example.grocerycompanion.ui.screens
 
 import android.annotation.SuppressLint
-import android.os.Build
-import android.view.ViewGroup
-import androidx.annotation.OptIn
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageProxy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.runtime.*
@@ -17,7 +11,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 

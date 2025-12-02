@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 fun ShoppingListScreen() {
     // Use Firebase user (or demo fallback)
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "demoUser"
+    // ViewModel with custom factory (because it needs constructor params)
 
     val vm: ShoppingListViewModel = viewModel(
         factory = ViewModelFactory {
@@ -51,15 +52,18 @@ fun ShoppingListScreen() {
             )
         }
     )
+    // Live shopping-list data streams
 
     val items by vm.list.collectAsState()
     val isLoading by vm.isLoading.collectAsState()
     val errorMessage by vm.errorMessage.collectAsState()
     val productsById by vm.productsById.collectAsState()
 
+    // Local UI caches: per-store totals + cheapest pick per item
     var storeTotals by remember { mutableStateOf<List<StoreTotal>>(emptyList()) }
     var perItemRecs by remember { mutableStateOf<Map<String, ItemPickUi>>(emptyMap()) }
 
+    // Recompute estimated total only when items/per-item recommendations change
     val estimatedTotal = remember(items, perItemRecs) {
         items.sumOf { sli ->
             val rec = perItemRecs[sli.itemId]
@@ -245,6 +249,7 @@ fun ShoppingListScreen() {
                                 brand = product?.brand,
                                 recommendation = pickUi,
                                 onRemove = { id ->
+                                    // Use coroutine because these repo calls are suspend functions
                                     scope.launch { vm.remove(id) }
                                 },
                                 onQtyChange = { id, qty ->
@@ -288,7 +293,8 @@ fun ShoppingListScreen() {
                                 )
                             }
                         }
-                        Text(
+                        Text(                        // Total price highlight
+
                             text = "$" + "%.2f".format(estimatedTotal),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
@@ -312,12 +318,13 @@ private fun ShoppingListRow(
     onRemove: (String) -> Unit,
     onQtyChange: (String, Int) -> Unit
 ) {
-    val displayName = productName ?: item.itemId
+    val displayName = productName ?: item.itemId     // If product metadata not loaded yet → fallback to ID
+
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .animateContentSize(),
+            .animateContentSize(), // smoothly resizes when brand/recommendation appear/disappear
         elevation = CardDefaults.cardElevation(2.dp),
         shape = MaterialTheme.shapes.medium
     ) {
@@ -326,6 +333,8 @@ private fun ShoppingListRow(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Name + brand + cheapest-store recommendation
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -351,6 +360,7 @@ private fun ShoppingListRow(
                     )
                 }
             }
+            // Decrement button (disabled at qty = 1)
 
             IconButton(
                 onClick = { if (item.qty > 1) onQtyChange(item.itemId, item.qty - 1) },

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -55,15 +56,25 @@ fun ReceiptDisplay(receipt : Receipt?, onAddItems: () -> Unit, onClose: () -> Un
 
                 Spacer(modifier = Modifier.padding(15.dp))
 
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(15.dp)){
-                    receipt?.items?.forEach{ item ->
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            ),
-                            modifier = Modifier.wrapContentHeight().fillMaxWidth()){
-                            Text(item.name, style = MaterialTheme.typography.titleMedium)
-                            Text(item.price, style = MaterialTheme.typography.bodyMedium)
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    receipt?.items?.forEach { item ->
+                        item {
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                            ) {
+                                Column(Modifier.padding(12.dp)) {
+                                    Text(item.name, style = MaterialTheme.typography.titleMedium)
+                                    Text(item.price, style = MaterialTheme.typography.bodyMedium)
+                                }
+                            }
                         }
                     }
                 }

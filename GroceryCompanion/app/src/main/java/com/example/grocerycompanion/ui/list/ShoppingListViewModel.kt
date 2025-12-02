@@ -95,7 +95,7 @@ class ShoppingListViewModel(
         startCollecting()
     }
 
-    /**
+    /*
      * Compute total per store using cheapest price per item.
      * itemId is the PRODUCT DOCUMENT ID (e.g. "ss17").
      */
@@ -185,7 +185,7 @@ class ShoppingListViewModel(
                 .thenBy { it.distanceKm ?: Double.MAX_VALUE }
         )
     }
-    /**
+    /*
      * For each item (product ID), pick the cheapest store and convert it into a UI object.
      */
     suspend fun computePerItemCheapestUi(): Map<String, ItemPickUi> {

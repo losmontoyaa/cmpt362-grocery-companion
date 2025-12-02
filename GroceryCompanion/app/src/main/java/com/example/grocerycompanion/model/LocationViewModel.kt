@@ -13,6 +13,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+/*
+
+ViewModel for retrieving a user’s location. Used to create a route to stores.
+Uses FusedLocationProviderClient to get the device’s location and exposes it as a StateFlow
+
+ */
+
 class LocationViewModel(application: Application) : AndroidViewModel(application) {
     private val fusedClient = LocationServices.getFusedLocationProviderClient(application)
 

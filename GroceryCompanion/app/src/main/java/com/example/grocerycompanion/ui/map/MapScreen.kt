@@ -17,6 +17,8 @@ import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 
+// Composable to display a Google map showing a marker for the user’s location, a
+// marker at the store’s location, and a polyline showing the directions between the two
 
 @Composable
 fun MapScreen(

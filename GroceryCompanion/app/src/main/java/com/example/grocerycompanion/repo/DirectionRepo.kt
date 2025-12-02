@@ -6,6 +6,13 @@ import com.google.android.gms.maps.model.LatLng
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/*
+Repository for fetching driving directions using Google Directions API with a given set of
+origin and destination coordinates. The encoded polyline response is then decoded into a
+list of LatLng points to be displayed on a map
+ */
+
+
 object DirectionRepo {
 
     private val retrofit = Retrofit.Builder()
@@ -27,6 +34,7 @@ object DirectionRepo {
     }
 }
 
+// taken inspiration from myruns assignments
 private fun decodePolyline(encoded: String): List<LatLng> {
     val poly = ArrayList<LatLng>()
     var index = 0

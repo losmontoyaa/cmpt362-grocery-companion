@@ -567,7 +567,7 @@ private fun extractReceipt(context: Context, uri: Uri, onResult: (Receipt?) -> U
 // Using OpenAI, the content of the receipt is interpreted and put into a usable format.
 private fun analyzeReceiptText(extractedText: String, onResult: (Receipt?) -> Unit) {
 
-    val client = OpenAI("[INSERT OPEN AI KEY HERE]")
+    val client = OpenAI("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")
 
     //Carlos Added: last line of prompt changed slightly.
     CoroutineScope(Dispatchers.IO).launch {

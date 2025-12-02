@@ -2,6 +2,7 @@ package com.example.grocerycompanion.util
 import com.example.grocerycompanion.model.Product
 import kotlin.math.*
 
+// inspiration from myruns5 and mr4
 fun haversineKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     val R = 6371.0
     val dLat = Math.toRadians(lat2 - lat1)

@@ -9,7 +9,7 @@ class FirebasePriceRepo {
     private val db = FirebaseFirestore.getInstance()
     private val products = db.collection("products")
 
-    /**
+    /*
      * Return the price(s) for a given product document ID (e.g. "ss17").
      *
      * With your current Firestore shape (one price per product doc),

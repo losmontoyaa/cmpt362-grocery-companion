@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,9 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.grocerycompanion.model.Price
-import com.example.grocerycompanion.model.Store
-
 import com.example.grocerycompanion.model.LocationViewModel
 import com.example.grocerycompanion.model.ProductSearchViewModel
 import com.example.grocerycompanion.model.RatingViewModel
@@ -44,6 +40,15 @@ import com.example.grocerycompanion.util.LocationViewModelFactory
 
 import com.example.grocerycompanion.util.ViewModelFactory
 import kotlinx.coroutines.launch
+
+/*
+
+Displays information about an item based on its ID.
+Displays the item’s image, name, brand, average rating, recent reviews, and prices by store.
+Contains buttons and clickable text to change the item’s price, view its nutrition content, or add to the user’s shopping list.
+Can display a map showing a route from the user’s location to a selected store carrying the item
+
+ */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -197,7 +202,8 @@ fun ItemDetailScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-
+                            // shows the average ratings and ratings count based
+                            // on the database information
                             AverageRatingDisplay(
                                 average = it.avgRating,
                                 ratingCount = it.ratingsCount
@@ -206,7 +212,7 @@ fun ItemDetailScreen(
 
                         Spacer(modifier = Modifier.width(16.dp))
 
-                        // RIGHT: change price + star bar + nutrition button
+                        // change price + star bar + nutrition button
                         Column(
                             horizontalAlignment = Alignment.End
                         ) {
@@ -230,7 +236,6 @@ fun ItemDetailScreen(
                         }
                     }
                 }
-                //Spacer(modifier = Modifier.height(12.dp))
             }
 
             // Qty + Add to list row
@@ -386,7 +391,7 @@ fun ItemDetailScreen(
         )
     }
 
-    // ───────── Change price dialog (currently NO real update wired yet) ─────────
+    // ───────── Change price dialog () ─────────
     if (showPriceDialog) {
         AlertDialog(
             onDismissRequest = { showPriceDialog = false },
@@ -435,11 +440,6 @@ fun ItemDetailScreen(
 
 @Composable
 private fun StorePriceRow(
-    /*price: Price,
-    store: Store,
-    isCheapest: Boolean,
-    onQuickAdd: () -> Unit*/
-
     price: Double,
     size: String,
     store: String,
@@ -467,7 +467,6 @@ private fun StorePriceRow(
         ) {
             Column(Modifier.weight(1f)) {
                 Text(
-                    //text = store.name,
                     text = store,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
@@ -475,7 +474,6 @@ private fun StorePriceRow(
                 )
 
                 Text(
-                    //text = "$${"%.2f".format(price.price)} ${price.unit}",
                     text = "$${"%.2f".format(price)} $size",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary

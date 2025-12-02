@@ -17,7 +17,7 @@ class FirebaseItemRepo(
     private val productsCol = db.collection("products")
     private val itemsCol = db.collection("items")
 
-    /**
+    /*
      * Stream ALL items shown in the browse screen:
      * - All docs from products
      * - All docs from items
@@ -54,7 +54,7 @@ class FirebaseItemRepo(
         }
     }
 
-    /**
+    /*
      * Get a single item by id:
      * 1) try products/{id}
      * 2) fall back to items/{id}
@@ -73,7 +73,7 @@ class FirebaseItemRepo(
         return null
     }
 
-    /**
+    /*
      * Add a user-created item to products/{id}.
      *
      * Also writes:
@@ -122,7 +122,7 @@ class FirebaseItemRepo(
 
 }
 
-/**
+/*
  * Map a document from PRODUCTS → Item
  */
 private fun DocumentSnapshot.toItemFromProducts(): Item? {
@@ -149,7 +149,7 @@ private fun DocumentSnapshot.toItemFromProducts(): Item? {
     )
 }
 
-/**
+/*
  * Map a document from ITEMS → Item (legacy collection)
  */
 private fun DocumentSnapshot.toItemFromItems(): Item? {

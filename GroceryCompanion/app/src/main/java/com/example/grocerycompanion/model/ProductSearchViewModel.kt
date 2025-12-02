@@ -8,6 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/*
+ViewModel to search database for products based on name + brand. Orders the results by distance from the user.
+Fetches the list of products using the ProductRepository and holds them in a list that contains pairs: (Product, distance)
+ */
 class ProductSearchViewModel(
     private val repository: ProductRepository = ProductRepository()
 ) : ViewModel() {

@@ -12,9 +12,23 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-//import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 
+/*
+  NutritionViewModel.kt
+
+  ViewModel responsible for fetching nutrition information for a grocery item
+  using the USDA FoodData Central API. The ViewModel:
+
+   • Builds a lightweight Retrofit client on demand
+   • Fetches the first match for a given item name
+   • Extracts key nutrients (energy, protein, fat, carbs, sugars)
+   • Separates other nutrients into a secondary list for UI display
+
+  UI observes `nutritionData` to update automatically when results load.
+ */
+
+// UI-layer container for nutrients split into meaningful + extra groups
 
 data class NutritionUiData(
     val mainNutrients: List<FoodNutrient> = emptyList(),
@@ -29,7 +43,10 @@ class NutritionViewModel : ViewModel() {
     fun fetchNutritionForGroceryItem(itemName: String) {
         viewModelScope.launch {
             try {
+                // Lenient JSON parser so extra fields from USDA don't break deserialization
+
                 val json = Json { ignoreUnknownKeys = true }
+                // Create Retrofit instance specifically for this request
 
                 val retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -37,6 +54,8 @@ class NutritionViewModel : ViewModel() {
                     .build()
 
                 val service = retrofit.create(UsdaApiService::class.java)
+                // Query USDA by item name
+
                 val response = service.searchFoods(query = itemName)
                 val firstFood = response.foods.firstOrNull()
 
@@ -47,6 +66,7 @@ class NutritionViewModel : ViewModel() {
                         nutrients.firstOrNull {
                             it.nutrientName.contains(nameContains, ignoreCase = true)
                         }
+                    // Extract key nutrients based on common USDA naming variations
 
                     val energy  = pick("Energy")
                     val protein = pick("Protein")
@@ -61,10 +81,12 @@ class NutritionViewModel : ViewModel() {
                         carbs,
                         sugar
                     )
-
+                    // Extras = all nutrients except the ones already in main
+                    // Matches by nutrientId when available (avoids false collisions)
                     val extras = nutrients
                         .filter { n -> main.none { it.nutrientId != null && it.nutrientId == n.nutrientId } }
                         .sortedBy { it.nutrientName }
+                    // Update UI state
 
                     _nutritionData.value = NutritionUiData(
                         mainNutrients = main,

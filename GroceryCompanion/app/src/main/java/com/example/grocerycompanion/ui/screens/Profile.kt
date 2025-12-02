@@ -62,7 +62,7 @@ fun Profile(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
-            .background(Color(0xFF07A71C)),   // Your green color
+            .background(Color(0xFF07A71C)),   //  green color
         contentAlignment = Alignment.Center
     ) {
         Text(
