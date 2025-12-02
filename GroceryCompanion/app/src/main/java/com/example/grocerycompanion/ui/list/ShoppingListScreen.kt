@@ -1,6 +1,10 @@
 package com.example.grocerycompanion.ui.list
 
 import androidx.compose.animation.AnimatedVisibility
+
+import androidx.compose.foundation.shape.RoundedCornerShape
+
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.grocerycompanion.model.ShoppingListItem
+import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.repo.FirebasePriceRepo
 import com.example.grocerycompanion.repo.FirebaseShoppingListRepo
 import com.example.grocerycompanion.repo.FirebaseStoreRepo
@@ -41,7 +46,8 @@ fun ShoppingListScreen() {
             ShoppingListViewModel(
                 listRepo = FirebaseShoppingListRepo(userId = userId),
                 priceRepo = FirebasePriceRepo(),
-                storeRepo = FirebaseStoreRepo()
+                storeRepo = FirebaseStoreRepo(),
+                itemRepo = FirebaseItemRepo()
             )
         }
     )
@@ -49,10 +55,17 @@ fun ShoppingListScreen() {
     val items by vm.list.collectAsState()
     val isLoading by vm.isLoading.collectAsState()
     val errorMessage by vm.errorMessage.collectAsState()
+    val productsById by vm.productsById.collectAsState()
 
     var storeTotals by remember { mutableStateOf<List<StoreTotal>>(emptyList()) }
     var perItemRecs by remember { mutableStateOf<Map<String, ItemPickUi>>(emptyMap()) }
 
+    val estimatedTotal = remember(items, perItemRecs) {
+        items.sumOf { sli ->
+            val rec = perItemRecs[sli.itemId]
+            (rec?.price ?: 0.0) * sli.qty
+        }
+    }
     val scope = rememberCoroutineScope()
 
     // 🔁 Auto recompute totals & per-item recommendations whenever list changes
@@ -199,52 +212,107 @@ fun ShoppingListScreen() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // List content
-            if (items.isEmpty() && !isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Your shopping list is empty.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            // MAIN CONTENT AREA (takes remaining height)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                if (items.isEmpty() && !isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Your shopping list is empty.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(items, key = { it.itemId }) { sli ->
+                            val pickUi = perItemRecs[sli.itemId]
+                            val product = productsById[sli.itemId]
+
+
+                            ShoppingListRow(
+                                item = sli,
+                                productName = product?.name,
+                                brand = product?.brand,
+                                recommendation = pickUi,
+                                onRemove = { id ->
+                                    scope.launch { vm.remove(id) }
+                                },
+                                onQtyChange = { id, qty ->
+                                    scope.launch { vm.setQty(id, qty) }
+                                }
+                            )
+                        }
+                    }
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+            }
+
+            // 🔽 TOTAL PRICE SECTION AT BOTTOM
+            if (items.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    elevation = CardDefaults.cardElevation(2.dp),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
-                    items(items, key = { it.itemId }) { sli ->
-                        val pickUi = perItemRecs[sli.itemId]
-                        ShoppingListRow(
-                            item = sli,
-                            recommendation = pickUi,
-                            onRemove = { id ->
-                                scope.launch { vm.remove(id) }
-                            },
-                            onQtyChange = { id, qty ->
-                                scope.launch { vm.setQty(id, qty) }
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Estimated total (cheapest per item)",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+
+                            // If you still want to mention the "best overall store" when it exists:
+                            bestStore?.let { best ->
+                                Text(
+                                    text = "Best overall store: ${best.storeName}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
+                        }
+                        Text(
+                            text = "$" + "%.2f".format(estimatedTotal),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
             }
+
         }
     }
 }
 
+
+
 @Composable
 private fun ShoppingListRow(
     item: ShoppingListItem,
+    productName: String?,
+    brand: String?,
     recommendation: ItemPickUi?,
     onRemove: (String) -> Unit,
     onQtyChange: (String, Int) -> Unit
 ) {
-    // ❗ item.itemId IS THE BARCODE NOW (e.g. 068700115004)
-    // We no longer have InMemoryDataSource here.
-    val displayName = item.itemId
+    val displayName = productName ?: item.itemId
 
     Card(
         modifier = Modifier
@@ -267,6 +335,13 @@ private fun ShoppingListRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (!brand.isNullOrBlank()) {
+                    Text(
+                        text = brand,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 if (recommendation != null) {
                     Text(
                         text = "Best: ${recommendation.storeName} — $${"%.2f".format(recommendation.price)}",

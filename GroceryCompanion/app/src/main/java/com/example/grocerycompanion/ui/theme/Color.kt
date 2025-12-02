@@ -3,6 +3,7 @@ package com.example.grocerycompanion.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // Brand core
+
 val BrandGreen = Color(0xFF16A34A)      // primary CTA
 val BrandGreenDark = Color(0xFF15803D)  // darker variant
 val BrandYellow = Color(0xFFFACC15)     // accent / deals
