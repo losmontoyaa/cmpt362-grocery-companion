@@ -74,7 +74,9 @@ class ItemViewModel(
         listRepo.add(safeKey, qty)
     }
 
-    fun updatePrice(storeId: String, newPrice: Double) = viewModelScope.launch {
+    fun updatePrice(newPrice: Double) = viewModelScope.launch {
         // Placeholder for future "userPrices" collection, if you add it later.
+        itemRepo.updatePrice(itemId, newPrice)
+
     }
 }

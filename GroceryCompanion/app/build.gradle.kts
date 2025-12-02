@@ -9,14 +9,6 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 
     id("org.jetbrains.kotlin.plugin.serialization")
-
-    // Kotlinx Serialization -- Carlos Added
-    //id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
-}
-
-repositories {
-    google()
-    mavenCentral()
 }
 
 repositories {
@@ -185,6 +177,9 @@ dependencies {
 
     // Coroutines for async operations (typically already included in Compose projects)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // Location Services
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 
 
 

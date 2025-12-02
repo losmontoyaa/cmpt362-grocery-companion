@@ -144,6 +144,20 @@ private fun AppRoot() {
                 showReceiptCamera = false
             }
 
+        val hasLocationPermission = remember {
+            mutableStateOf(
+                ContextCompat.checkSelfPermission(
+                    ctx,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            )
+        }
+
+        val locationPermissionLauncher =
+            rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+                hasLocationPermission.value = granted
+            }
+
         // Auto login
         LaunchedEffect(Unit) {
             if (auth.currentUser != null) isLoggedIn = true
@@ -161,6 +175,13 @@ private fun AppRoot() {
                     )
                 }
             }
+
+            LaunchedEffect(Unit) {
+                if (!hasLocationPermission.value) {
+                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            }
+
 
             // ---- NAVIGATION FLOW ----
             when {
@@ -185,6 +206,10 @@ private fun AppRoot() {
                             //Carlos Added
                             pendingSearch = code
                             showGokuFlow = true
+
+                            // jason branch addition:
+
+
 
                         },
                         onClose = { showBarcodeCamera = false }

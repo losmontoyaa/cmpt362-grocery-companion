@@ -113,6 +113,13 @@ class FirebaseItemRepo(
 
         productsCol.document(item.id).set(baseData).await()
     }
+    suspend fun updatePrice(itemId: String, newPrice: Double) {
+        productsCol
+            .document(itemId)
+            .update("total_price", newPrice)
+            .await()
+    }
+
 }
 
 /**

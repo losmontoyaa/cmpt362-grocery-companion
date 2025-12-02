@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 // Users click/press on a star to submit a rating. This opens up a NewRatingScreen, passing in the ratings/stars selected.
 @Composable
 fun InteractiveStarBar(
-    starSize: Dp = 30.dp,
+    starSize: Dp = 22.dp,
     onStarSelect: (Int) -> Unit
 ) {
     var selectedStars by remember { mutableStateOf(0) }
@@ -36,7 +36,7 @@ fun InteractiveStarBar(
                         selectedStars = i
                         onStarSelect(i)
                     },
-                tint = if (i <= selectedStars) Color.Yellow else Color.Gray
+                tint = Color.Gray
             )
         }
     }
