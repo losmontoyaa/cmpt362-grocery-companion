@@ -201,7 +201,6 @@ class ShoppingListViewModel(
             .flatten()
             .map { it.storeId }
             .toSet()
-
         val stores = storeRepo.getStores(storeIds)
 
         val picks = mutableMapOf<String, ItemPickUi>()

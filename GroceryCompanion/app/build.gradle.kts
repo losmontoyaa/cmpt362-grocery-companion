@@ -10,6 +10,13 @@ plugins {
 
     id("org.jetbrains.kotlin.plugin.serialization")
 
+    // Kotlinx Serialization -- Carlos Added
+    //id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21"
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 repositories {
@@ -19,7 +26,9 @@ repositories {
 
 android {
     namespace = "com.example.grocerycompanion"
-    compileSdk = 36
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId = "com.example.grocerycompanion"
@@ -159,6 +168,9 @@ dependencies {
     implementation("com.aallam.openai:openai-client:3.7.0")
     implementation("io.ktor:ktor-client-okhttp:2.3.6")
     implementation(platform("io.ktor:ktor-bom:2.3.6"))
+
+    // Kotlinx Serialization -- Carlos Added
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 
     // Kotlinx Serialization Converter for parsing JSON
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")

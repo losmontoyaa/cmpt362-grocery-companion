@@ -56,7 +56,8 @@ class ItemListViewModel(
         category: String,
         storeName: String,
         latitude: Double?,
-        longitude: Double?
+        longitude: Double?,
+        price: Double?
     ) = viewModelScope.launch {
         try {
             val id = "item-${System.currentTimeMillis()}"
@@ -76,7 +77,8 @@ class ItemListViewModel(
                 item = item,
                 storeName = storeName,
                 latitude = latitude,
-                longitude = longitude
+                longitude = longitude,
+                price = price
             )
         } catch (e: Exception) {
             _errorMessage.value = e.message ?: "Failed to add item."

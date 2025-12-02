@@ -1,9 +1,7 @@
 package com.example.grocerycompanion
 
 import android.Manifest
-import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -37,7 +35,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -47,11 +44,16 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.grocerycompanion.repo.FirebaseItemRepo
 import com.example.grocerycompanion.ui.item.ItemDetailScreen
 import com.example.grocerycompanion.ui.item.ItemListScreen
+import com.example.grocerycompanion.ui.item.ItemListViewModel
 import com.example.grocerycompanion.ui.list.ShoppingListScreen
 import com.example.grocerycompanion.ui.screens.*
 import com.example.grocerycompanion.ui.theme.GroceryCompanionTheme
+import com.example.grocerycompanion.util.Receipt
+import com.example.grocerycompanion.util.ViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -70,6 +72,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 
 import com.example.grocerycompanion.ui.start.AppStartPage
 
@@ -80,8 +83,10 @@ private enum class BottomTab { ITEMS, LIST }
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent { AppRoot() }
+
     }
 }
 
@@ -103,8 +108,20 @@ private fun AppRoot() {
         var showBarcodeCamera by remember { mutableStateOf(false) }
         var showReceiptCamera by remember { mutableStateOf(false) }
         var receiptPhotoUri by remember { mutableStateOf<Uri?>(null) }
-        var parsedReceipt by remember { mutableStateOf<String?>(null) }
+        var parsedReceipt by remember { mutableStateOf<Receipt?>(null) }
         var showReceiptInfo by remember { mutableStateOf(false) }
+
+        // Carlos Added: -- pending search for barcode scanning (could also be used for search bar!).
+        var pendingSearch by remember {mutableStateOf<String?>(null)}
+
+        // Carlos Added -- View model to add receipt items to db
+        val vm: ItemListViewModel = viewModel(
+            factory = ViewModelFactory {
+                ItemListViewModel(
+                    itemRepo = FirebaseItemRepo()
+                )
+            }
+        )
 
         val hasCameraPermission = remember {
             mutableStateOf(
@@ -119,8 +136,8 @@ private fun AppRoot() {
         val receiptCameraLauncher =
             rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
                 if (success && receiptPhotoUri != null) {
-                    extractReceipt(ctx, receiptPhotoUri!!) { receiptText ->
-                        parsedReceipt = receiptText
+                    extractReceipt(ctx, receiptPhotoUri!!) { parsedText ->
+                        parsedReceipt = parsedText
                         showReceiptInfo = true
                     }
                 }
@@ -145,13 +162,15 @@ private fun AppRoot() {
                 }
             }
 
+            // ---- NAVIGATION FLOW ----
             when {
                 showGokuFlow -> {
                     GroceryApp(
                         onBackToHome = {
                             // back to StartUpScreen
                             showGokuFlow = false
-                        }
+                        },
+                        searchQuery = pendingSearch
                     )
                 }
 
@@ -163,10 +182,10 @@ private fun AppRoot() {
                             showBarcodeCamera = false
                             Log.d("BARCODE_SCAN", "Scanned: $code")
 
-                            val searchIntent = Intent(Intent.ACTION_WEB_SEARCH).apply {
-                                putExtra(SearchManager.QUERY, code)
-                            }
-                            ctx.startActivity(searchIntent)
+                            //Carlos Added
+                            pendingSearch = code
+                            showGokuFlow = true
+
                         },
                         onClose = { showBarcodeCamera = false }
                     )
@@ -189,11 +208,45 @@ private fun AppRoot() {
                     }
                 }
 
-                // -------- RECEIPT DISPLAY --------
+                // Carlos Added: -------- RECEIPT DISPLAY --------
                 showReceiptInfo -> {
                     ReceiptDisplay(
-                        receiptText = parsedReceipt ?: "No receipt text found.",
+                        receipt = parsedReceipt,
+                        onAddItems = {
+                            val receiptItems = parsedReceipt?.items
+
+                            if (receiptItems != null) {
+                                val storeName = parsedReceipt!!.storeName
+
+                                for (item in receiptItems) {
+                                    vm.addItem(
+                                        name = item.name,
+                                        brand = storeName,
+                                        barcode = "",
+                                        category = "",
+                                        storeName = storeName,
+                                        latitude = null,
+                                        longitude = null,
+                                        price = item.price.toDouble()
+                                    )
+                                }
+
+                                Toast.makeText(
+                                    ctx,
+                                    "Items added to search! Thank you for contributing!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                parsedReceipt = null
+                                showReceiptInfo = false
+                            }
+
+                        },
                         onClose = {
+                            Toast.makeText(
+                                ctx,
+                                "Receipt Scan Cancelled.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             parsedReceipt = null
                             showReceiptInfo = false
                         }
@@ -218,8 +271,22 @@ private fun AppRoot() {
 
                 // -------- HOME SCREEN --------
                 else -> {
+                    // Carlos Added: Fixed search bar.
                     StartUpScreen(
-                        onSearch = { _: SearchInput -> },
+                        onSearch = { input: SearchInput ->
+
+                            pendingSearch = when (input) {
+                                is SearchInput.ProductName -> {
+                                    input.value
+                                }
+
+                                is SearchInput.Barcode -> {
+                                    input.digits
+                                }
+                            }
+
+                            showGokuFlow = true
+                        },
                         onScanBarcodeClick = { showBarcodeCamera = true },
                         onScanReceiptClick = { showReceiptCamera = true },
                         onOpenItemList = { showGokuFlow = true },
@@ -318,7 +385,8 @@ private fun AppRoot() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun GroceryApp(
-    onBackToHome: () -> Unit
+    onBackToHome: () -> Unit,
+    searchQuery: String?
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(BottomTab.ITEMS) }
     var detailItemId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -438,9 +506,9 @@ fun GroceryApp(
                     HorizontalPager(state = pagerState) { page ->
                         when (page) {
                             0 -> ItemListScreen(onItemClick = { id ->
-                                detailItemId = id
-                            })
-
+                                detailItemId = id },
+                                searchQuery = searchQuery
+                            )
                             1 -> ShoppingListScreen()
                         }
                     }
@@ -452,35 +520,31 @@ fun GroceryApp(
 
 /* ---------- RECEIPT OCR + AI PARSING ---------- */
 // Uses ML Kit OCR to extract raw text from the receipt, then sends it to OpenAI
-// to be interpreted into a structured format. -- Carlos
-private fun extractReceipt(context: Context, uri: Uri, onResult: (String) -> Unit) {
-    val image = InputImage.fromFilePath(context, uri)
+// to be interpreted into a structured format.
+private fun extractReceipt(context: Context, uri: Uri, onResult: (Receipt?) -> Unit) {
+    val img = InputImage.fromFilePath(context, uri)
     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-    recognizer
-        .process(image)
-        .addOnSuccessListener { visionText ->
-            val resultText = visionText.text
-            Log.d("RECEIPT_OCR", "Raw receipt text: $resultText")
+    recognizer.process(img).addOnSuccessListener {
+            scannedText ->
+        val text = scannedText.text
+        Log.d("OCR Output", "Extracted text: $text")
 
-            analyzeReceiptText(resultText) { parsedText ->
-                onResult(parsedText)
-            }
+        analyzeReceiptText(text){
+                scannedReceipt ->
+            onResult(scannedReceipt)
         }
-        .addOnFailureListener { e ->
-            e.printStackTrace()
-            onResult("Error: ${e.message}")
-        }
+    }.addOnFailureListener { e ->
+        e.printStackTrace()
+        onResult(null) }
 }
 
 // Using OpenAI, the content of the receipt is interpreted and put into a usable format.
-private fun analyzeReceiptText(extractedText: String, onResult: (String) -> Unit) {
-    // IMPORTANT: Do NOT commit your real API key.
-    // Recommended: expose it via BuildConfig and local.properties:
-    // val client = OpenAI(BuildConfig.OPENAI_API_KEY)
+private fun analyzeReceiptText(extractedText: String, onResult: (Receipt?) -> Unit) {
 
-    val client = OpenAI("[INSERT OPENAI API KEY HERE")  // or temporarily: OpenAI("CARLOS_KEY_HERE")
+    val client = OpenAI("[INSERT OPEN AI KEY HERE]")
 
+    //Carlos Added: last line of prompt changed slightly.
     CoroutineScope(Dispatchers.IO).launch {
         try {
             val request = ChatCompletionRequest(
@@ -491,17 +555,17 @@ private fun analyzeReceiptText(extractedText: String, onResult: (String) -> Unit
                         content = """
                             You are an AI designed only to parse information from text extracted from shopping receipts.
                             Your task is to discern and extract the following information from the provided text string and
-                            return in strictly this format:
+                            return in strictly this JSON format:
 
                             {
                                 "store_name": "",
                                 "address": "",
                                 "items": [
-                                    {"name": "", "price": ""}
+                                    {"item_name": "", "price": ""}
                                 ]
                             }
 
-                            Do NOT include comments or explanations.
+                            Do NOT include comments or explanations. Do NOT include the $ when returning price.
                         """.trimIndent()
                     ),
                     ChatMessage(
@@ -512,17 +576,34 @@ private fun analyzeReceiptText(extractedText: String, onResult: (String) -> Unit
             )
 
             val completion = client.chatCompletion(request)
-            val output = completion.choices.first().message?.content ?: "NO RESULT"
+            val output = completion.choices.first().message?.content ?: "{}"
+            val json = Json {
+                ignoreUnknownKeys = true
+                allowStructuredMapKeys = true
+                prettyPrint = true
+                isLenient = true
+                coerceInputValues = true
+            }
+
             Log.d("RECEIPT_AI", "GPT receipt analysis: $output")
+
+            val parsedReceipt = try{
+                json.decodeFromString<Receipt>(output)
+
+            }catch (e: Exception){
+                Log.d("Json Parsing","Failed to Parse Generated JSON!")
+                null
+            }
 
             // Switch back to main so we can safely update Compose state
             withContext(Dispatchers.Main) {
-                onResult(output)
+                onResult(parsedReceipt)
             }
+
         } catch (e: Exception) {
             Log.e("RECEIPT_AI", "Error calling OpenAI", e)
             withContext(Dispatchers.Main) {
-                onResult("ERROR: ${e.message}")
+                onResult(null)
             }
         }
     }

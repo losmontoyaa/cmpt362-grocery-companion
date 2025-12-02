@@ -85,7 +85,8 @@ class FirebaseItemRepo(
         item: Item,
         storeName: String,
         latitude: Double?,
-        longitude: Double?
+        longitude: Double?,
+        price: Double?
     ) {
         val baseData = mutableMapOf<String, Any>(
             "product_name" to item.name,
@@ -104,6 +105,7 @@ class FirebaseItemRepo(
 
         baseData["store_id"] = storeId
         baseData["store_name"] = storeName
+        baseData["total_price"] = price as Any
 
         if (latitude != null && longitude != null) {
             baseData["location"] = GeoPoint(latitude, longitude)

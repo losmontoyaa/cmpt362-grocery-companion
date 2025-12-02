@@ -24,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,9 +45,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
+// Carlos Added: Search Query
 @Composable
 fun ItemListScreen(
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    searchQuery: String?
 ) {
     val vm: ItemListViewModel = viewModel(
         factory = ViewModelFactory {
@@ -62,6 +65,12 @@ fun ItemListScreen(
 
     var query by remember { mutableStateOf("") }
     var showAddDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(searchQuery) {
+        if(searchQuery != null && searchQuery != query){
+            query = searchQuery
+        }
+    }
 
     val filtered = remember(query, items) {
         if (query.isBlank()) items
@@ -216,7 +225,8 @@ fun ItemListScreen(
                     category = category,
                     storeName = storeName,
                     latitude = lat,
-                    longitude = lng
+                    longitude = lng,
+                    price = 0.00
                 )
                 showAddDialog = false
             }
