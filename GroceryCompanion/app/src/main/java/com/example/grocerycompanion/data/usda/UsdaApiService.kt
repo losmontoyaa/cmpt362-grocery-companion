@@ -24,7 +24,7 @@ import retrofit2.http.Query
 const val BASE_URL = "https://api.nal.usda.gov/fdc/v1/" // Base URL for all USDA FDC API requests
 
 
-const val API_KEY ="NrZzpJbJwwim1cRM58pQLRAYD4EBZDYmBbx0I2PR" //USDA API KEY Here
+const val API_KEY ="[INSERT API KEY HERE]" //USDA API KEY Here
 
 // defines the endpoint
 interface UsdaApiService {
