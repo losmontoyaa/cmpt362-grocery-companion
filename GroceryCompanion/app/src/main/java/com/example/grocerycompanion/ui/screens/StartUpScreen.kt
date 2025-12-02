@@ -185,11 +185,11 @@ fun StartUpScreen(
             )
             Spacer(Modifier.height(36.dp))
 
-            Button(onClick = onOpenItemList) {
+            /*Button(onClick = onOpenItemList) {
                 Text("Open Item List")
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))*/
         }
     }
 }
