@@ -4,6 +4,9 @@
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,21 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryCompanion">
-        <activity
-            android:name=".MapTestActivity"
-            android:exported="true"
-            android:label="@string/title_activity_map_test_activity.kt"
-            android:theme="@style/Theme.GroceryCompanion" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
-        <activity
-            android:name=".RatingTestActivity"
-            android:exported="true"
-            android:label="@string/title_activity_rating_test"
-            android:theme="@style/Theme.GroceryCompanion" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
